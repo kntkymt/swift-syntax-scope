@@ -9,10 +9,12 @@ let package = Package(
     ],
     products: [
         .library(name: "SwiftSyntaxScope", targets: ["SwiftSyntaxScope"]),
+        .executable(name: "swift-scope-dump", targets: ["swift-scope-dump"]),
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"604.0.0"),
         .package(url: "https://github.com/kntkymt/swift-gsb-macro", from: "0.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.7.0"),
     ],
     targets: [
         .target(
@@ -21,6 +23,15 @@ let package = Package(
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftParser", package: "swift-syntax"),
                 .product(name: "GSB", package: "swift-gsb-macro"),
+            ]
+        ),
+        .executableTarget(
+            name: "swift-scope-dump",
+            dependencies: [
+                "SwiftSyntaxScope",
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftParser", package: "swift-syntax"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
         .testTarget(

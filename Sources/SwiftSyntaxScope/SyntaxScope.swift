@@ -14,7 +14,7 @@ public final class SourceFileScope: SyntaxScopeProtocol {
 
     public let syntax: Syntax
 
-    init(syntax: SourceFileSyntax) {
+    public init(syntax: SourceFileSyntax) {
         self.syntax = syntax
     }
 
