@@ -1,0 +1,24 @@
+{
+  "originHash" : "a1ceba457ae24409965f10a2ead2724a0c72f9a325fbcca6fe8cdbfe7528fb87",
+  "pins" : [
+    {
+      "identity" : "swift-gsb-macro",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kntkymt/swift-gsb-macro",
+      "state" : {
+        "revision" : "628259a10c2a5544d7121986cf66501baddbe5bb",
+        "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "9de99a78f099e59caf2b2beec65a4c45d54b2081",
+        "version" : "603.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}
