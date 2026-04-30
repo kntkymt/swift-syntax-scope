@@ -2,7 +2,7 @@
 
 A study project that builds a lexical scope tree on top of [SwiftSyntax](https://github.com/swiftlang/swift-syntax) and uses it to perform lexical name lookup over a Swift source file.
 
-> Note: SwiftSyntax already ships with [SwiftLexicalLookup](https://github.com/swiftlang/swift-syntax/tree/main/Sources/SwiftLexicalLookup), which provides production-ready lexical lookup based on SwiftSyntax. This project is a study project re-implementing scope system of swift compiler named [ASTScope](https://github.com/swiftlang/swift/blob/main/lib/AST/ASTScope.cpp) in SwiftSyntax.
+> Note: SwiftSyntax already ships with [SwiftLexicalLookup](https://github.com/swiftlang/swift-syntax/tree/main/Sources/SwiftLexicalLookup), which provides lexical lookup based on SwiftSyntax. This project is a study project re-implementing scope system of swift compiler named [ASTScope](https://github.com/swiftlang/swift/blob/main/lib/AST/ASTScope.cpp) in SwiftSyntax.
 
 ## Overview
 
