@@ -1,6 +1,6 @@
 import SwiftSyntax
 
-enum CatchNode {
+public enum CatchNode {
     case function(AbstractFunctionDeclScope.Kind)
     case closure(ClosureExprSyntax)
     case doCatch(DoStmtSyntax)
@@ -46,7 +46,7 @@ enum CatchNode {
 }
 
 extension SourceFileSyntax {
-    func lookupCatchNode(at position: AbsolutePosition) -> CatchNode? {
+    public func lookupCatchNode(at position: AbsolutePosition) -> CatchNode? {
         let innermost = findStartingScopeForLookup(position: position)
 
         var innerBodyScope: BraceStmtScope? = nil

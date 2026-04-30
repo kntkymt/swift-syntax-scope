@@ -113,7 +113,7 @@ public final class TopLevelCodeScope: SyntaxScopeProtocol {
 public final class AbstractFunctionDeclScope: SyntaxScopeProtocol {
     public typealias Syntax = SwiftSyntax.Syntax
 
-    enum Kind {
+    public enum Kind {
         case function(FunctionDeclSyntax)
         case initializer(InitializerDeclSyntax)
         case deinitializer(DeinitializerDeclSyntax)
@@ -121,7 +121,7 @@ public final class AbstractFunctionDeclScope: SyntaxScopeProtocol {
         case implicitGetter(AccessorBlockSyntax)
     }
 
-    let kind: Kind
+    public let kind: Kind
     public let syntax: Syntax
     public let parent: (any SyntaxScopeProtocol)?
 
