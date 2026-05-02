@@ -661,15 +661,12 @@ extension SwiftSyntaxScopeTests {
                 }
                 """,
             references: [
-                "3️⃣": .init(
-                    innerMost: .init(name: "Outer", atMarker: "1️⃣", kind: .declaration)
-                ),
+                "3️⃣": .init(notFound: "Outer"),
                 "4️⃣": .init(
                     innerMost: .init(name: "Inner", atMarker: "2️⃣", kind: .declaration)
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "A", atMarker: "6️⃣", kind: .declaration),
-                    outer: [.init(name: "A", atMarker: "5️⃣", kind: .declaration)]
+                    innerMost: .init(name: "A", atMarker: "6️⃣", kind: .declaration)
                 ),
                 "8️⃣": .init(notFound: "c"),
             ]
@@ -798,9 +795,7 @@ extension SwiftSyntaxScopeTests {
                 "9️⃣": .init(
                     innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
                 ),
-                "🔟": .init(
-                    innerMost: .init(name: "SType", atMarker: "8️⃣", kind: .declaration)
-                ),
+                "🔟": .init(notFound: "SType"),
             ]
         )
     }

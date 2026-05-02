@@ -31,6 +31,7 @@ extension VariableDeclSyntax {
 }
 
 extension DeclSyntaxProtocol {
+    // simplified qualified lookup
     var introducedNames: [LookupName] {
         if let varDecl = self.as(VariableDeclSyntax.self) {
             return varDecl.introducedNames

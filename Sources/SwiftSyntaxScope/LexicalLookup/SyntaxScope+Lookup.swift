@@ -352,11 +352,12 @@ extension NominalTypeScope {
     public var introducedLookupNames: [LookupName] {
         switch portion {
         case .whole:
-            var names: [LookupName] = [.declaration(SwiftSyntax.Syntax(syntax))]
+            // whole doesn't introduce their own name, it's handled by top level lookup
             if syntax.is(ProtocolDeclSyntax.self) {
-                names.append(.implicit(.Self(DeclSyntax(syntax))))
+                return [.implicit(.Self(DeclSyntax(syntax)))]
             }
-            return names
+
+            return []
         case .where:
             return []
         case .body:

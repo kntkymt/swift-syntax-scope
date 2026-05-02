@@ -72,9 +72,9 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 6:13]
-                |-NominalTypeDeclScope [1:1 - 4:1] 'Outer' introduces=[declaration:Outer]
+                |-NominalTypeDeclScope [1:1 - 4:1] 'Outer'
                 | `-NominalTypeBodyScope [1:14 - 4:1] 'Outer' introduces=[declaration:Inner]
-                |   `-NominalTypeDeclScope [2:5 - 3:5] 'Inner' introduces=[declaration:Inner]
+                |   `-NominalTypeDeclScope [2:5 - 3:5] 'Inner'
                 |     `-NominalTypeBodyScope [2:18 - 3:5] 'Inner'
                 `-TopLevelCodeScope [6:1 - 6:13] introduces=[identifier:value]
                   `-PatternEntryDeclScope [6:5 - 6:13] entry 0
@@ -95,7 +95,7 @@ private extension SwiftSyntaxScopeTests {
                 `-TopLevelCodeScope [1:1 - 6:9] introduces=[identifier:a]
                   |-PatternEntryDeclScope [1:5 - 1:9] entry 0
                   | `-PatternEntryInitializerScope [1:9 - 1:9] entry 0
-                  |-NominalTypeDeclScope [3:1 - 4:1] 'Outer' introduces=[declaration:Outer]
+                  |-NominalTypeDeclScope [3:1 - 4:1] 'Outer'
                   | `-NominalTypeBodyScope [3:14 - 4:1] 'Outer'
                   `-TopLevelCodeScope [6:1 - 6:9] introduces=[identifier:b]
                     `-PatternEntryDeclScope [6:5 - 6:9] entry 0
@@ -116,7 +116,7 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 6:1] 'f()'
                   `-FunctionBodyScope [1:10 - 6:1]
                     `-BraceStmtScope [1:10 - 6:1] introduces=[declaration:Local]
-                      |-NominalTypeDeclScope [2:5 - 3:5] 'Local' introduces=[declaration:Local]
+                      |-NominalTypeDeclScope [2:5 - 3:5] 'Local'
                       | `-NominalTypeBodyScope [2:18 - 3:5] 'Local'
                       `-PatternEntryDeclScope [5:9 - 6:1] entry 0 introduces=[identifier:value]
                         `-PatternEntryInitializerScope [5:17 - 5:17] entry 0
@@ -582,7 +582,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 7:1]
-                |-NominalTypeDeclScope [1:1 - 2:1] 'Foo' introduces=[declaration:Foo]
+                |-NominalTypeDeclScope [1:1 - 2:1] 'Foo'
                 | `-NominalTypeBodyScope [1:12 - 2:1] 'Foo'
                 `-ExtensionDeclScope [4:14 - 7:1] 'Foo'
                   `-ExtensionBodyScope [4:15 - 7:1] 'Foo' introduces=[implicit:Self, declaration:bar]
@@ -597,7 +597,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 2:1]
-                `-NominalTypeDeclScope [1:1 - 2:1] 'Foo' introduces=[declaration:Foo]
+                `-NominalTypeDeclScope [1:1 - 2:1] 'Foo'
                   `-GenericParameterScope [1:13 - 2:1] 'T' introduces=[identifier:T]
                     |-NominalTypeWhereScope [1:15 - 1:32] 'Foo'
                     `-NominalTypeBodyScope [1:34 - 2:1] 'Foo'
@@ -610,7 +610,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 2:1]
-                `-NominalTypeDeclScope [1:1 - 2:1] 'Foo' introduces=[declaration:Foo]
+                `-NominalTypeDeclScope [1:1 - 2:1] 'Foo'
                   `-GenericParameterScope [1:14 - 2:1] 'T' introduces=[identifier:T]
                     `-GenericParameterScope [1:16 - 2:1] 'U' introduces=[identifier:U]
                       `-NominalTypeBodyScope [1:18 - 2:1] 'Foo'
@@ -760,7 +760,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S' introduces=[declaration:f]
                     `-AbstractFunctionDeclScope [2:5 - 2:15] 'f()'
                       `-FunctionBodyScope [2:14 - 2:15] introduces=[implicit:self]
@@ -774,7 +774,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S'
                     `-AbstractFunctionDeclScope [2:5 - 2:23] 'init(value:)'
                       |-ParameterListScope [2:9 - 2:20]
@@ -789,7 +789,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'C' introduces=[declaration:C]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'C'
                   `-NominalTypeBodyScope [1:9 - 3:1] 'C'
                     `-AbstractFunctionDeclScope [2:5 - 2:13] 'deinit'
                       `-FunctionBodyScope [2:12 - 2:13] introduces=[implicit:self]
@@ -803,7 +803,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-GenericParameterScope [1:11 - 3:1] 'T' introduces=[identifier:T]
                     `-NominalTypeBodyScope [1:13 - 3:1] 'S'
                       `-AbstractFunctionDeclScope [2:5 - 2:53] 'init(value:other:)'
@@ -915,7 +915,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 6:1]
-                `-NominalTypeDeclScope [1:1 - 6:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 6:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 6:1] 'S' introduces=[identifier:x]
                     `-PatternEntryDeclScope [2:9 - 5:5] entry 0
                       |-PatternEntryInitializerScope [2:18 - 2:18] entry 0
@@ -938,7 +938,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 6:1]
-                `-NominalTypeDeclScope [1:1 - 6:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 6:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 6:1] 'S' introduces=[identifier:x]
                     `-PatternEntryDeclScope [2:9 - 5:5] entry 0
                       |-PatternEntryInitializerScope [2:18 - 2:18] entry 0
@@ -958,7 +958,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S' introduces=[identifier:x]
                     `-PatternEntryDeclScope [2:9 - 2:27] entry 0
                       `-AbstractFunctionDeclScope [2:16 - 2:27] 'get'
@@ -977,7 +977,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 6:1]
-                `-NominalTypeDeclScope [1:1 - 6:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 6:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 6:1] 'S' introduces=[identifier:x]
                     `-PatternEntryDeclScope [2:9 - 5:5] entry 0
                       `-AbstractFunctionDeclScope [2:16 - 5:5] 'get'
@@ -998,7 +998,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 6:1]
-                `-NominalTypeDeclScope [1:1 - 6:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 6:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 6:1] 'S'
                     `-SubscriptDeclScope [2:5 - 5:5] 'subscript(i:)' introduces=[identifier:i]
                       |-ParameterListScope [2:14 - 2:21]
@@ -1018,7 +1018,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S'
                     `-SubscriptDeclScope [2:5 - 2:34] 'subscript(i:)' introduces=[identifier:i]
                       |-ParameterListScope [2:14 - 2:21]
@@ -1035,7 +1035,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'P' introduces=[declaration:P, implicit:Self]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'P' introduces=[implicit:Self]
                   `-NominalTypeBodyScope [1:12 - 3:1] 'P'
                     `-SubscriptDeclScope [2:5 - 2:40] 'subscript(i:)' introduces=[identifier:i]
                       |-ParameterListScope [2:14 - 2:21]
@@ -1053,7 +1053,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 5:1]
-                `-NominalTypeDeclScope [1:1 - 5:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 5:1] 'S'
                   `-GenericParameterScope [1:11 - 5:1] 'T' introduces=[identifier:T]
                     `-NominalTypeBodyScope [1:13 - 5:1] 'S'
                       `-SubscriptDeclScope [2:5 - 4:5] 'subscript(i:)' introduces=[identifier:i]
@@ -1072,7 +1072,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'E' introduces=[declaration:E]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'E'
                   `-NominalTypeBodyScope [1:8 - 3:1] 'E'
                     `-EnumElementScope [2:10 - 2:12] 'foo'
                 """
@@ -1085,7 +1085,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'E' introduces=[declaration:E]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'E'
                   `-NominalTypeBodyScope [1:8 - 3:1] 'E'
                     |-EnumElementScope [2:10 - 2:13] 'foo'
                     `-EnumElementScope [2:15 - 2:22] 'bar'
@@ -1100,7 +1100,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'E' introduces=[declaration:E]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'E'
                   `-NominalTypeBodyScope [1:8 - 3:1] 'E'
                     `-EnumElementScope [2:10 - 2:28] 'baz'
                       `-ParameterListScope [2:13 - 2:28]
@@ -1115,7 +1115,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'E' introduces=[declaration:E]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'E'
                   `-NominalTypeBodyScope [1:13 - 3:1] 'E'
                     `-EnumElementScope [2:10 - 2:16] 'qux'
                 """
@@ -1128,7 +1128,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'E' introduces=[declaration:E]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'E'
                   `-NominalTypeBodyScope [1:8 - 3:1] 'E'
                     `-EnumElementScope [2:10 - 2:36] 'foo'
                       `-ParameterListScope [2:13 - 2:36]
@@ -1197,7 +1197,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 2:11]
-                `-NominalTypeDeclScope [1:1 - 2:11] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 2:11] 'S'
                   |-CustomAttributeScope [1:1 - 1:10] 'MainActor'
                   `-NominalTypeBodyScope [2:10 - 2:11] 'S'
                 """
@@ -1261,7 +1261,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 4:1]
-                `-NominalTypeDeclScope [1:1 - 4:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 4:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 4:1] 'S'
                     `-SubscriptDeclScope [2:5 - 3:34] 'subscript(i:)' introduces=[identifier:i]
                       |-CustomAttributeScope [2:5 - 2:14] 'MainActor'
@@ -1333,7 +1333,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S'
                     `-MacroExpansionDeclScope [2:5 - 2:15] 'expandMe'
                 """
@@ -1346,7 +1346,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S'
                     `-MacroExpansionDeclScope [2:5 - 2:23] 'expandMe'
                 """
@@ -1359,7 +1359,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S'
                     `-MacroExpansionDeclScope [2:5 - 2:24] 'expandMe'
                       `-ClosureParametersScope [2:22 - 2:24] introduces=[identifier:x]
@@ -1384,7 +1384,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 2:21]
-                `-NominalTypeDeclScope [1:1 - 2:21] 'C' introduces=[declaration:C]
+                `-NominalTypeDeclScope [1:1 - 2:21] 'C'
                   |-CustomAttributeScope [1:1 - 1:11] 'Observable'
                   `-NominalTypeBodyScope [2:9 - 2:21] 'C' introduces=[identifier:x]
                     `-PatternEntryDeclScope [2:15 - 2:19] entry 0
@@ -1413,7 +1413,7 @@ private extension SwiftSyntaxScopeTests {
                 """,
                 """
                 SourceFileScope [1:1 - 3:1]
-                `-NominalTypeDeclScope [1:1 - 3:1] 'S' introduces=[declaration:S]
+                `-NominalTypeDeclScope [1:1 - 3:1] 'S'
                   `-NominalTypeBodyScope [1:10 - 3:1] 'S'
                     `-MacroExpansionDeclScope [2:5 - 2:52] 'expandMe'
                       |-ClosureParametersScope [2:32 - 2:34] introduces=[identifier:x]
