@@ -8,6 +8,8 @@ public protocol SyntaxScopeProtocol: AnyObject, CustomStringConvertible {
     var children: [any SyntaxScopeProtocol] { get set }
     var isExpanded: Bool { get set }
 
+    var scopeTypeDescription: String { get }
+
     var sourceRange: Range<AbsolutePosition> { get }
     var sourceLocationConverter: SourceLocationConverter { get }
     var lookupParent: (any SyntaxScopeProtocol)? { get }

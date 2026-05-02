@@ -26,7 +26,7 @@ public final class SourceFileScope: SyntaxScopeProtocol {
     public var isExpanded: Bool = false
     public lazy var sourceLocationConverter = SourceLocationConverter(fileName: "", tree: syntax)
 
-    private var scopeTypeDescription: String { "SourceFileScope" }
+    public var scopeTypeDescription: String { "SourceFileScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -55,7 +55,7 @@ public final class TopLevelCodeScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "TopLevelCodeScope" }
+    public var scopeTypeDescription: String { "TopLevelCodeScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         syntax.trimmedRange.lowerBound..<lookupUpperBound
@@ -140,7 +140,7 @@ public final class AbstractFunctionDeclScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "AbstractFunctionDeclScope" }
+    public var scopeTypeDescription: String { "AbstractFunctionDeclScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription) '\(compactName)'"
@@ -168,7 +168,7 @@ public final class SubscriptDeclScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "SubscriptDeclScope" }
+    public var scopeTypeDescription: String { "SubscriptDeclScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription) '\(compactName)'"
@@ -198,7 +198,7 @@ public final class EnumElementScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "EnumElementScope" }
+    public var scopeTypeDescription: String { "EnumElementScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.name.text)'"
@@ -225,7 +225,7 @@ public final class MacroDeclScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "MacroDeclScope" }
+    public var scopeTypeDescription: String { "MacroDeclScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription) '\(compactName)'"
@@ -253,7 +253,7 @@ public final class MacroDefinitionScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "MacroDefinitionScope" }
+    public var scopeTypeDescription: String { "MacroDefinitionScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -280,7 +280,7 @@ public final class MacroExpansionDeclScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "MacroExpansionDeclScope" }
+    public var scopeTypeDescription: String { "MacroExpansionDeclScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.macroName.text)'"
@@ -308,7 +308,7 @@ public final class CustomAttributeScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "CustomAttributeScope" }
+    public var scopeTypeDescription: String { "CustomAttributeScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.attributeName.trimmedDescription)'"
@@ -369,7 +369,7 @@ public final class ParameterListScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "ParameterListScope" }
+    public var scopeTypeDescription: String { "ParameterListScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -397,7 +397,7 @@ public final class DefaultArgumentInitializerScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "DefaultArgumentInitializerScope" }
+    public var scopeTypeDescription: String { "DefaultArgumentInitializerScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -426,7 +426,7 @@ public final class FunctionBodyScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "FunctionBodyScope" }
+    public var scopeTypeDescription: String { "FunctionBodyScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -471,7 +471,7 @@ public final class BraceStmtScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "BraceStmtScope" }
+    public var scopeTypeDescription: String { "BraceStmtScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         braceRange
@@ -548,8 +548,12 @@ public final class NominalTypeScope: SyntaxScopeProtocol {
         self.attributes = nominalType.attributes
     }
 
+    public var scopeTypeDescription: String {
+        "NominalType\(portion.name)Scope"
+    }
+
     public var description: String {
-        "NominalType\(portion.name)Scope \(sourceRangeDescription) '\(nominalName.text)'"
+        "\(scopeTypeDescription) \(sourceRangeDescription) '\(nominalName.text)'"
     }
 
     public var sourceRange: Range<AbsolutePosition> {
@@ -607,8 +611,12 @@ public final class ExtensionScope: SyntaxScopeProtocol {
     var memberBlock: MemberBlockSyntax { syntax.memberBlock }
     var genericWhereClause: GenericWhereClauseSyntax? { syntax.genericWhereClause }
 
+    public var scopeTypeDescription: String {
+        "Extension\(portion.name)Scope"
+    }
+
     public var description: String {
-        "Extension\(portion.name)Scope \(sourceRangeDescription) '\(syntax.extendedType.trimmedDescription)'"
+        "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.extendedType.trimmedDescription)'"
     }
 
     public var sourceRange: Range<AbsolutePosition> {
@@ -685,8 +693,12 @@ public final class TypeAliasScope: SyntaxScopeProtocol {
         self.parent = parent
     }
 
+    public var scopeTypeDescription: String {
+        "TypeAlias\(portion.name)Scope"
+    }
+
     public var description: String {
-        "TypeAlias\(portion.name)Scope \(sourceRangeDescription) '\(syntax.name.text)'"
+        "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.name.text)'"
     }
 
     public var sourceRange: Range<AbsolutePosition> {
@@ -757,7 +769,7 @@ public final class GenericParameterScope: SyntaxScopeProtocol {
         sourceRange
     }
 
-    private var scopeTypeDescription: String { "GenericParameterScope" }
+    public var scopeTypeDescription: String { "GenericParameterScope" }
 
     public var description: String {
         let nameText = introducedName?.text ?? "_"
@@ -802,7 +814,7 @@ public final class CaptureListScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "CaptureListScope" }
+    public var scopeTypeDescription: String { "CaptureListScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         syntax.statements.positionAfterSkippingLeadingTrivia..<syntax.trimmedRange.upperBound
@@ -840,7 +852,7 @@ public final class ClosureParametersScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "ClosureParametersScope" }
+    public var scopeTypeDescription: String { "ClosureParametersScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         syntax.statements.positionAfterSkippingLeadingTrivia..<syntax.trimmedRange.upperBound
@@ -875,7 +887,7 @@ public final class IfExprScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "IfExprScope" }
+    public var scopeTypeDescription: String { "IfExprScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -904,7 +916,7 @@ public final class WhileStmtScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "WhileStmtScope" }
+    public var scopeTypeDescription: String { "WhileStmtScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -932,7 +944,7 @@ public final class RepeatWhileScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "RepeatWhileScope" }
+    public var scopeTypeDescription: String { "RepeatWhileScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -961,7 +973,7 @@ public final class ForEachStmtScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "ForEachStmtScope" }
+    public var scopeTypeDescription: String { "ForEachStmtScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -989,7 +1001,7 @@ public final class ForEachPatternScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "ForEachPatternScope" }
+    public var scopeTypeDescription: String { "ForEachPatternScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         let lowerBound =
@@ -1031,7 +1043,7 @@ public final class DoStmtScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "DoStmtScope" }
+    public var scopeTypeDescription: String { "DoStmtScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -1060,7 +1072,7 @@ public final class SwitchExprScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "SwitchExprScope" }
+    public var scopeTypeDescription: String { "SwitchExprScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -1113,7 +1125,7 @@ public final class CaseStmtScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "CaseStmtScope" }
+    public var scopeTypeDescription: String { "CaseStmtScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -1161,7 +1173,7 @@ public final class CaseLabelItemScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "CaseLabelItemScope" }
+    public var scopeTypeDescription: String { "CaseLabelItemScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         guard let whereClause = kind.whereClause else {
@@ -1209,7 +1221,7 @@ public final class CaseStmtBodyScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "CaseStmtBodyScope" }
+    public var scopeTypeDescription: String { "CaseStmtBodyScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         switch kind {
@@ -1252,7 +1264,7 @@ public final class GuardStmtScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "GuardStmtScope" }
+    public var scopeTypeDescription: String { "GuardStmtScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -1292,7 +1304,7 @@ public final class GuardStmtBodyScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "GuardStmtBodyScope" }
+    public var scopeTypeDescription: String { "GuardStmtBodyScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -1326,7 +1338,7 @@ public final class ConditionalClausePatternUseScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "ConditionalClausePatternUseScope" }
+    public var scopeTypeDescription: String { "ConditionalClausePatternUseScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -1363,7 +1375,7 @@ public final class ConditionalClauseInitializerScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "ConditionalClauseInitializerScope" }
+    public var scopeTypeDescription: String { "ConditionalClauseInitializerScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
@@ -1399,7 +1411,7 @@ public final class PatternEntryDeclScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "PatternEntryDeclScope" }
+    public var scopeTypeDescription: String { "PatternEntryDeclScope" }
 
     public var sourceRange: Range<AbsolutePosition> {
         syntax.bindings[bindingIndex].trimmedRange
@@ -1429,7 +1441,7 @@ public final class PatternEntryInitializerScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "PatternEntryInitializerScope" }
+    public var scopeTypeDescription: String { "PatternEntryInitializerScope" }
 
     public var description: String {
         guard let parent = parent as? PatternEntryDeclScope else {
@@ -1460,7 +1472,7 @@ public final class TryScope: SyntaxScopeProtocol {
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
 
-    private var scopeTypeDescription: String { "TryScope" }
+    public var scopeTypeDescription: String { "TryScope" }
 
     public var description: String {
         "\(scopeTypeDescription) \(sourceRangeDescription)"
