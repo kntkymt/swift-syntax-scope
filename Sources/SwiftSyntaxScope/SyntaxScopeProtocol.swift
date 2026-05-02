@@ -10,10 +10,9 @@ public protocol SyntaxScopeProtocol: AnyObject, CustomStringConvertible {
 
     var scopeTypeDescription: String { get }
 
-    var sourceRange: Range<AbsolutePosition> { get }
+    var lookupRange: Range<AbsolutePosition> { get }
     var sourceLocationConverter: SourceLocationConverter { get }
     var lookupParent: (any SyntaxScopeProtocol)? { get }
-    var lookupRange: Range<AbsolutePosition> { get }
 
     @discardableResult
     func expandAndBeCurrent() -> any SyntaxScopeProtocol
@@ -36,17 +35,13 @@ extension SyntaxScopeProtocol {
         parent
     }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         syntax.trimmedRange
     }
 
     public var sourceLocationConverter: SourceLocationConverter {
         parent?.sourceLocationConverter
             ?? SourceLocationConverter(fileName: "", tree: syntax.root)
-    }
-
-    public var lookupRange: Range<AbsolutePosition> {
-        syntax.trimmedRange
     }
 
     public var introducedLookupNames: [LookupName] { [] }

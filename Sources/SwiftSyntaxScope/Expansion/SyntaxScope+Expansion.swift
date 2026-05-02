@@ -59,7 +59,7 @@ extension GenericTypeOrExtensionScopeProtocol {
 
             let leaf = ScopeCreator.addNestedGenericParameterScopes(
                 kinds: genericParameterScopeKinds,
-                holderLookupUpperBound: sourceRange.upperBound,
+                holderLookupUpperBound: lookupRange.upperBound,
                 parent: self
             )
 
@@ -139,7 +139,7 @@ extension AbstractFunctionDeclScope: DoesNotCreateInsertion {
 
         let leaf = ScopeCreator.addNestedGenericParameterScopes(
             kinds: genericParameterScopeKinds,
-            holderLookupUpperBound: sourceRange.upperBound,
+            holderLookupUpperBound: lookupRange.upperBound,
             parent: self
         )
 
@@ -212,7 +212,7 @@ extension SubscriptDeclScope: DoesNotCreateInsertion {
 
         let leaf = ScopeCreator.addNestedGenericParameterScopes(
             kinds: genericParameterScopeKinds,
-            holderLookupUpperBound: sourceRange.upperBound,
+            holderLookupUpperBound: lookupRange.upperBound,
             parent: self
         )
 
@@ -274,7 +274,7 @@ extension MacroDeclScope: DoesNotCreateInsertion {
 
         var leaf = ScopeCreator.addNestedGenericParameterScopes(
             kinds: genericParameterScopeKinds,
-            holderLookupUpperBound: sourceRange.upperBound,
+            holderLookupUpperBound: lookupRange.upperBound,
             parent: self
         )
 
@@ -439,7 +439,7 @@ extension TypeAliasScope: CreateInsertion {
 
             let leaf = ScopeCreator.addNestedGenericParameterScopes(
                 kinds: genericParameterScopeKinds,
-                holderLookupUpperBound: sourceRange.upperBound,
+                holderLookupUpperBound: lookupRange.upperBound,
                 parent: self
             )
 
@@ -488,7 +488,7 @@ extension ClosureParametersScope: DoesNotCreateInsertion {
             of: BraceStmtScope(
                 syntax: syntax.statements,
                 parent: self,
-                braceRange: sourceRange,
+                braceRange: lookupRange,
                 localFuncs: decls.localFuncs,
                 localTypes: decls.localTypes
             ),

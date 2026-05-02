@@ -124,10 +124,6 @@ func refersToSameScope(_ lhs: any SyntaxScopeProtocol, as rhs: any SyntaxScopePr
 }
 
 extension TopLevelCodeScope {
-    public var lookupRange: Range<AbsolutePosition> {
-        sourceRange
-    }
-
     public var introducedLookupNames: [LookupName] {
         guard let variableDecl = syntax.item.as(VariableDeclSyntax.self) else {
             return []
@@ -373,7 +369,11 @@ extension ExtensionScope {
     public var lookupRange: Range<AbsolutePosition> {
         switch portion {
         case .whole:
-            return syntax.trimmedRange
+            // Mirrors the compiler's `ExtensionScope::moveStartPastExtendedNominal`:
+            // start past the extended type so that resolving the extended
+            // nominal does not recursively re-enter this scope.
+            return syntax.extendedType.trimmedRange
+                .upperBound..<syntax.trimmedRange.upperBound
         case .where:
             guard let genericWhereClause else {
                 return syntax.trimmedRange

@@ -22,9 +22,9 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 4:1] 'f()'
                   `-FunctionBodyScope [1:10 - 4:1]
                     `-BraceStmtScope [1:10 - 4:1]
-                      `-PatternEntryDeclScope [2:9 - 2:13] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 4:1] entry 0 introduces=[identifier:a]
                         |-PatternEntryInitializerScope [2:13 - 2:13] entry 0
-                        `-PatternEntryDeclScope [3:9 - 3:13] entry 0 introduces=[identifier:b]
+                        `-PatternEntryDeclScope [3:9 - 4:1] entry 0 introduces=[identifier:b]
                           `-PatternEntryInitializerScope [3:13 - 3:13] entry 0
                 """
             ),
@@ -41,9 +41,9 @@ private extension SwiftSyntaxScopeTests {
                   |-ParameterListScope [1:7 - 1:14]
                   `-FunctionBodyScope [1:16 - 4:1] introduces=[identifier:a]
                     `-BraceStmtScope [1:16 - 4:1]
-                      `-PatternEntryDeclScope [2:9 - 2:14] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 4:1] entry 0 introduces=[identifier:a]
                         |-PatternEntryInitializerScope [2:13 - 2:14] entry 0
-                        `-PatternEntryDeclScope [3:9 - 3:13] entry 0 introduces=[identifier:b]
+                        `-PatternEntryDeclScope [3:9 - 4:1] entry 0 introduces=[identifier:b]
                           `-PatternEntryInitializerScope [3:13 - 3:13] entry 0
                 """
             ),
@@ -118,7 +118,7 @@ private extension SwiftSyntaxScopeTests {
                     `-BraceStmtScope [1:10 - 6:1] introduces=[declaration:Local]
                       |-NominalTypeDeclScope [2:5 - 3:5] 'Local' introduces=[declaration:Local]
                       | `-NominalTypeBodyScope [2:18 - 3:5] 'Local'
-                      `-PatternEntryDeclScope [5:9 - 5:17] entry 0 introduces=[identifier:value]
+                      `-PatternEntryDeclScope [5:9 - 6:1] entry 0 introduces=[identifier:value]
                         `-PatternEntryInitializerScope [5:17 - 5:17] entry 0
                 """
             ),
@@ -137,13 +137,13 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 7:1] 'f()'
                   `-FunctionBodyScope [1:10 - 7:1]
                     `-BraceStmtScope [1:10 - 7:1]
-                      `-PatternEntryDeclScope [2:9 - 2:13] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 7:1] entry 0 introduces=[identifier:a]
                         |-PatternEntryInitializerScope [2:13 - 2:13] entry 0
                         `-IfExprScope [4:5 - 6:5]
-                          `-ConditionalClausePatternUseScope [4:8 - 4:18] introduces=[identifier:c]
+                          `-ConditionalClausePatternUseScope [4:8 - 6:5] introduces=[identifier:c]
                             |-ConditionalClauseInitializerScope [4:14 - 4:18]
                             `-BraceStmtScope [4:20 - 6:5]
-                              `-PatternEntryDeclScope [5:13 - 5:17] entry 0 introduces=[identifier:d]
+                              `-PatternEntryDeclScope [5:13 - 6:5] entry 0 introduces=[identifier:d]
                                 `-PatternEntryInitializerScope [5:17 - 5:17] entry 0
                 """
             ),
@@ -166,19 +166,19 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 11:1] 'f()'
                   `-FunctionBodyScope [1:10 - 11:1]
                     `-BraceStmtScope [1:10 - 11:1]
-                      `-PatternEntryDeclScope [2:9 - 2:13] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 11:1] entry 0 introduces=[identifier:a]
                         |-PatternEntryInitializerScope [2:13 - 2:13] entry 0
                         |-IfExprScope [4:5 - 6:5]
-                        | `-ConditionalClausePatternUseScope [4:8 - 4:18] introduces=[identifier:c]
+                        | `-ConditionalClausePatternUseScope [4:8 - 6:5] introduces=[identifier:c]
                         |   |-ConditionalClauseInitializerScope [4:14 - 4:18]
                         |   `-BraceStmtScope [4:20 - 6:5]
-                        |     `-PatternEntryDeclScope [5:13 - 5:17] entry 0 introduces=[identifier:d]
+                        |     `-PatternEntryDeclScope [5:13 - 6:5] entry 0 introduces=[identifier:d]
                         |       `-PatternEntryInitializerScope [5:17 - 5:17] entry 0
                         `-IfExprScope [8:5 - 10:5]
-                          `-ConditionalClausePatternUseScope [8:8 - 8:18] introduces=[identifier:e]
+                          `-ConditionalClausePatternUseScope [8:8 - 10:5] introduces=[identifier:e]
                             |-ConditionalClauseInitializerScope [8:14 - 8:18]
                             `-BraceStmtScope [8:20 - 10:5]
-                              `-PatternEntryDeclScope [9:13 - 9:17] entry 0 introduces=[identifier:f]
+                              `-PatternEntryDeclScope [9:13 - 10:5] entry 0 introduces=[identifier:f]
                                 `-PatternEntryInitializerScope [9:17 - 9:17] entry 0
                 """
             ),
@@ -197,7 +197,7 @@ private extension SwiftSyntaxScopeTests {
                     `-BraceStmtScope [1:10 - 5:1]
                       `-DoStmtScope [2:5 - 4:5]
                         `-BraceStmtScope [2:8 - 4:5]
-                          `-PatternEntryDeclScope [3:13 - 3:17] entry 0 introduces=[identifier:a]
+                          `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:a]
                             `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
                 """
             ),
@@ -217,16 +217,16 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 8:1] 'f()'
                   `-FunctionBodyScope [1:10 - 8:1]
                     `-BraceStmtScope [1:10 - 8:1]
-                      `-PatternEntryDeclScope [2:9 - 2:13] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 8:1] entry 0 introduces=[identifier:a]
                         |-PatternEntryInitializerScope [2:13 - 2:13] entry 0
                         `-DoStmtScope [3:5 - 7:5]
                           |-BraceStmtScope [3:8 - 5:5]
-                          | `-PatternEntryDeclScope [4:13 - 4:18] entry 0 introduces=[identifier:b]
+                          | `-PatternEntryDeclScope [4:13 - 5:5] entry 0 introduces=[identifier:b]
                           |   `-PatternEntryInitializerScope [4:17 - 4:18] entry 0
                           `-CaseStmtScope [5:7 - 7:5]
                             `-CaseStmtBodyScope [5:13 - 7:5] introduces=[implicit:error]
                               `-BraceStmtScope [5:13 - 7:5]
-                                `-PatternEntryDeclScope [6:13 - 6:18] entry 0 introduces=[identifier:c]
+                                `-PatternEntryDeclScope [6:13 - 7:5] entry 0 introduces=[identifier:c]
                                   `-PatternEntryInitializerScope [6:17 - 6:18] entry 0
                 """
             ),
@@ -299,16 +299,16 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 6:1] 'f()'
                   `-FunctionBodyScope [1:10 - 6:1]
                     `-BraceStmtScope [1:10 - 6:1]
-                      `-PatternEntryDeclScope [2:9 - 2:13] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 6:1] entry 0 introduces=[identifier:a]
                         |-PatternEntryInitializerScope [2:13 - 2:13] entry 0
                         `-ForEachStmtScope [3:5 - 5:5]
                           `-ForEachPatternScope [3:20 - 5:5] introduces=[identifier:i]
                             |-ClosureParametersScope [3:28 - 3:51]
                             | `-BraceStmtScope [3:28 - 3:51]
-                            |   `-PatternEntryDeclScope [3:32 - 3:39] entry 0 introduces=[identifier:a]
+                            |   `-PatternEntryDeclScope [3:32 - 3:51] entry 0 introduces=[identifier:a]
                             |     `-PatternEntryInitializerScope [3:36 - 3:39] entry 0
                             `-BraceStmtScope [3:55 - 5:5]
-                              `-PatternEntryDeclScope [4:13 - 4:17] entry 0 introduces=[identifier:b]
+                              `-PatternEntryDeclScope [4:13 - 5:5] entry 0 introduces=[identifier:b]
                                 `-PatternEntryInitializerScope [4:17 - 4:17] entry 0
                 """
             ),
@@ -326,10 +326,10 @@ private extension SwiftSyntaxScopeTests {
                   `-FunctionBodyScope [1:10 - 5:1]
                     `-BraceStmtScope [1:10 - 5:1]
                       `-WhileStmtScope [2:5 - 4:5]
-                        `-ConditionalClausePatternUseScope [2:11 - 2:21] introduces=[identifier:a]
+                        `-ConditionalClausePatternUseScope [2:11 - 4:5] introduces=[identifier:a]
                           |-ConditionalClauseInitializerScope [2:17 - 2:21]
                           `-BraceStmtScope [2:23 - 4:5]
-                            `-PatternEntryDeclScope [3:13 - 3:17] entry 0 introduces=[identifier:b]
+                            `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:b]
                               `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
                 """
             ),
@@ -347,12 +347,12 @@ private extension SwiftSyntaxScopeTests {
                   `-FunctionBodyScope [1:10 - 5:1]
                     `-BraceStmtScope [1:10 - 5:1]
                       `-WhileStmtScope [2:5 - 4:5]
-                        `-ConditionalClausePatternUseScope [2:11 - 2:22] introduces=[identifier:a]
+                        `-ConditionalClausePatternUseScope [2:11 - 4:5] introduces=[identifier:a]
                           |-ConditionalClauseInitializerScope [2:17 - 2:21]
-                          `-ConditionalClausePatternUseScope [2:24 - 2:35] introduces=[identifier:b]
+                          `-ConditionalClausePatternUseScope [2:24 - 4:5] introduces=[identifier:b]
                             |-ConditionalClauseInitializerScope [2:30 - 2:35]
                             `-BraceStmtScope [2:37 - 4:5]
-                              `-PatternEntryDeclScope [3:13 - 3:17] entry 0 introduces=[identifier:c]
+                              `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:c]
                                 `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
                 """
             ),
@@ -374,7 +374,7 @@ private extension SwiftSyntaxScopeTests {
                       `-WhileStmtScope [2:5 - 6:5]
                         `-ClosureParametersScope [3:9 - 5:5]
                           `-BraceStmtScope [3:9 - 5:5]
-                            `-PatternEntryDeclScope [3:13 - 3:21] entry 0 introduces=[identifier:inner]
+                            `-PatternEntryDeclScope [3:13 - 5:5] entry 0 introduces=[identifier:inner]
                               `-PatternEntryInitializerScope [3:21 - 3:21] entry 0
                 """
             ),
@@ -396,11 +396,11 @@ private extension SwiftSyntaxScopeTests {
                     `-BraceStmtScope [1:10 - 8:1]
                       `-RepeatWhileScope [2:5 - 7:6]
                         |-BraceStmtScope [2:12 - 4:5]
-                        | `-PatternEntryDeclScope [3:13 - 3:21] entry 0 introduces=[identifier:value]
+                        | `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:value]
                         |   `-PatternEntryInitializerScope [3:21 - 3:21] entry 0
                         `-ClosureParametersScope [5:9 - 7:5]
                           `-BraceStmtScope [5:9 - 7:5]
-                            `-PatternEntryDeclScope [5:13 - 5:21] entry 0 introduces=[identifier:inner]
+                            `-PatternEntryDeclScope [5:13 - 7:5] entry 0 introduces=[identifier:inner]
                               `-PatternEntryInitializerScope [5:21 - 5:21] entry 0
                 """
             ),
@@ -419,14 +419,14 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 7:1] 'f()'
                   `-FunctionBodyScope [1:10 - 7:1]
                     `-BraceStmtScope [1:10 - 7:1]
-                      `-GuardStmtScope [2:5 - 4:5]
-                        `-ConditionalClausePatternUseScope [2:11 - 2:21] introduces=[identifier:a]
+                      `-GuardStmtScope [2:5 - 7:1]
+                        `-ConditionalClausePatternUseScope [2:11 - 7:1] introduces=[identifier:a]
                           |-ConditionalClauseInitializerScope [2:17 - 2:21]
                           |-GuardStmtBodyScope [2:28 - 4:5]
                           | `-BraceStmtScope [2:28 - 4:5]
-                          |   `-PatternEntryDeclScope [3:13 - 3:17] entry 0 introduces=[identifier:b]
+                          |   `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:b]
                           |     `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
-                          `-PatternEntryDeclScope [6:9 - 6:13] entry 0 introduces=[identifier:c]
+                          `-PatternEntryDeclScope [6:9 - 7:1] entry 0 introduces=[identifier:c]
                             `-PatternEntryInitializerScope [6:13 - 6:13] entry 0
                 """
             ),
@@ -445,16 +445,16 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 7:1] 'f()'
                   `-FunctionBodyScope [1:10 - 7:1]
                     `-BraceStmtScope [1:10 - 7:1]
-                      `-GuardStmtScope [2:5 - 4:5]
-                        `-ConditionalClausePatternUseScope [2:11 - 2:22] introduces=[identifier:a]
+                      `-GuardStmtScope [2:5 - 7:1]
+                        `-ConditionalClausePatternUseScope [2:11 - 7:1] introduces=[identifier:a]
                           |-ConditionalClauseInitializerScope [2:17 - 2:21]
-                          `-ConditionalClausePatternUseScope [2:24 - 2:35] introduces=[identifier:b]
+                          `-ConditionalClausePatternUseScope [2:24 - 7:1] introduces=[identifier:b]
                             |-ConditionalClauseInitializerScope [2:30 - 2:35]
                             |-GuardStmtBodyScope [2:42 - 4:5]
                             | `-BraceStmtScope [2:42 - 4:5]
-                            |   `-PatternEntryDeclScope [3:13 - 3:17] entry 0 introduces=[identifier:d]
+                            |   `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:d]
                             |     `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
-                            `-PatternEntryDeclScope [6:9 - 6:13] entry 0 introduces=[identifier:c]
+                            `-PatternEntryDeclScope [6:9 - 7:1] entry 0 introduces=[identifier:c]
                               `-PatternEntryInitializerScope [6:13 - 6:13] entry 0
                 """
             ),
@@ -473,12 +473,12 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 7:1] 'f()'
                   `-FunctionBodyScope [1:10 - 7:1]
                     `-BraceStmtScope [1:10 - 7:1]
-                      `-GuardStmtScope [2:5 - 4:5]
-                        `-ConditionalClausePatternUseScope [2:11 - 2:26] introduces=[identifier:a]
+                      `-GuardStmtScope [2:5 - 7:1]
+                        `-ConditionalClausePatternUseScope [2:11 - 7:1] introduces=[identifier:a]
                           |-ConditionalClauseInitializerScope [2:22 - 2:26]
                           |-GuardStmtBodyScope [2:33 - 4:5]
                           | `-BraceStmtScope [2:33 - 4:5]
-                          `-PatternEntryDeclScope [6:9 - 6:13] entry 0 introduces=[identifier:b]
+                          `-PatternEntryDeclScope [6:9 - 7:1] entry 0 introduces=[identifier:b]
                             `-PatternEntryInitializerScope [6:13 - 6:13] entry 0
                 """
             ),
@@ -499,7 +499,7 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 9:1] 'f()'
                   `-FunctionBodyScope [1:10 - 9:1]
                     `-BraceStmtScope [1:10 - 9:1]
-                      `-PatternEntryDeclScope [2:9 - 2:13] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 9:1] entry 0 introduces=[identifier:a]
                         |-PatternEntryInitializerScope [2:13 - 2:13] entry 0
                         `-SwitchExprScope [3:5 - 8:5]
                           |-CaseStmtScope [4:5 - 5:17]
@@ -674,11 +674,11 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 5:1] 'f()'
                   `-FunctionBodyScope [1:10 - 5:1]
                     `-BraceStmtScope [1:10 - 5:1]
-                      `-PatternEntryDeclScope [2:9 - 4:5] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 5:1] entry 0 introduces=[identifier:a]
                         `-PatternEntryInitializerScope [2:13 - 4:5] entry 0
                           `-ClosureParametersScope [3:9 - 4:5] introduces=[identifier:b]
                             `-BraceStmtScope [3:9 - 4:5]
-                              `-PatternEntryDeclScope [3:13 - 3:17] entry 0 introduces=[identifier:c]
+                              `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:c]
                                 `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
                 """
             ),
@@ -695,11 +695,11 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 5:1] 'f()'
                   `-FunctionBodyScope [1:10 - 5:1]
                     `-BraceStmtScope [1:10 - 5:1]
-                      `-PatternEntryDeclScope [2:9 - 4:5] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 5:1] entry 0 introduces=[identifier:a]
                         `-PatternEntryInitializerScope [2:13 - 4:5] entry 0
                           `-ClosureParametersScope [3:9 - 4:5] introduces=[identifier:x, identifier:y]
                             `-BraceStmtScope [3:9 - 4:5]
-                              `-PatternEntryDeclScope [3:13 - 3:17] entry 0 introduces=[identifier:c]
+                              `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:c]
                                 `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
                 """
             ),
@@ -718,7 +718,7 @@ private extension SwiftSyntaxScopeTests {
                     `-BraceStmtScope [1:10 - 5:1]
                       `-ClosureParametersScope [3:9 - 4:5]
                         `-BraceStmtScope [3:9 - 4:5]
-                          `-PatternEntryDeclScope [3:13 - 3:21] entry 0 introduces=[identifier:inner]
+                          `-PatternEntryDeclScope [3:13 - 4:5] entry 0 introduces=[identifier:inner]
                             `-PatternEntryInitializerScope [3:21 - 3:21] entry 0
                 """
             ),
@@ -824,9 +824,9 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 4:1] 'f()'
                   `-FunctionBodyScope [1:10 - 4:1]
                     `-BraceStmtScope [1:10 - 4:1]
-                      `-PatternEntryDeclScope [2:9 - 2:17] entry 0 introduces=[identifier:outer]
+                      `-PatternEntryDeclScope [2:9 - 4:1] entry 0 introduces=[identifier:outer]
                         |-PatternEntryInitializerScope [2:17 - 2:17] entry 0
-                        `-PatternEntryDeclScope [3:9 - 3:32] entry 0 introduces=[identifier:c]
+                        `-PatternEntryDeclScope [3:9 - 4:1] entry 0 introduces=[identifier:c]
                           `-PatternEntryInitializerScope [3:13 - 3:32] entry 0
                             `-CaptureListScope [3:26 - 3:32] introduces=[identifier:outer]
                               `-ClosureParametersScope [3:26 - 3:32]
@@ -844,7 +844,7 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 3:1] 'f()'
                   `-FunctionBodyScope [1:17 - 3:1]
                     `-BraceStmtScope [1:17 - 3:1]
-                      `-PatternEntryDeclScope [2:9 - 2:19] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 3:1] entry 0 introduces=[identifier:a]
                         `-PatternEntryInitializerScope [2:13 - 2:19] entry 0
                           `-TryScope [2:13 - 2:19]
                 """
@@ -860,7 +860,7 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 3:1] 'f()'
                   `-FunctionBodyScope [1:17 - 3:1]
                     `-BraceStmtScope [1:17 - 3:1]
-                      `-PatternEntryDeclScope [2:9 - 2:20] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 3:1] entry 0 introduces=[identifier:a]
                         `-PatternEntryInitializerScope [2:13 - 2:20] entry 0
                           `-TryScope [2:13 - 2:20]
                 """
@@ -876,7 +876,7 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 3:1] 'f()'
                   `-FunctionBodyScope [1:10 - 3:1]
                     `-BraceStmtScope [1:10 - 3:1]
-                      `-PatternEntryDeclScope [2:9 - 2:20] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 3:1] entry 0 introduces=[identifier:a]
                         `-PatternEntryInitializerScope [2:13 - 2:20] entry 0
                           `-TryScope [2:13 - 2:20]
                 """
@@ -895,12 +895,12 @@ private extension SwiftSyntaxScopeTests {
                 `-AbstractFunctionDeclScope [1:1 - 6:1] 'f()'
                   `-FunctionBodyScope [1:17 - 6:1]
                     `-BraceStmtScope [1:17 - 6:1]
-                      `-PatternEntryDeclScope [2:9 - 5:7] entry 0 introduces=[identifier:a]
+                      `-PatternEntryDeclScope [2:9 - 6:1] entry 0 introduces=[identifier:a]
                         `-PatternEntryInitializerScope [2:13 - 5:7] entry 0
                           `-TryScope [2:13 - 5:7]
                             `-ClosureParametersScope [3:9 - 5:5]
                               `-BraceStmtScope [3:9 - 5:5]
-                                `-PatternEntryDeclScope [3:13 - 3:21] entry 0 introduces=[identifier:inner]
+                                `-PatternEntryDeclScope [3:13 - 5:5] entry 0 introduces=[identifier:inner]
                                   `-PatternEntryInitializerScope [3:21 - 3:21] entry 0
                 """
             ),
@@ -983,7 +983,7 @@ private extension SwiftSyntaxScopeTests {
                       `-AbstractFunctionDeclScope [2:16 - 5:5] 'get'
                         `-FunctionBodyScope [2:16 - 5:5] introduces=[implicit:self]
                           `-BraceStmtScope [2:16 - 5:5]
-                            `-PatternEntryDeclScope [3:13 - 3:21] entry 0 introduces=[identifier:inner]
+                            `-PatternEntryDeclScope [3:13 - 5:5] entry 0 introduces=[identifier:inner]
                               `-PatternEntryInitializerScope [3:21 - 3:21] entry 0
                 """
             ),

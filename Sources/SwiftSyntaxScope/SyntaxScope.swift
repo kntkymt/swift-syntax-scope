@@ -29,7 +29,7 @@ public final class SourceFileScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "SourceFileScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -57,12 +57,12 @@ public final class TopLevelCodeScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "TopLevelCodeScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         syntax.trimmedRange.lowerBound..<lookupUpperBound
     }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 
     var lookupUpperBound: AbsolutePosition {
@@ -143,7 +143,7 @@ public final class AbstractFunctionDeclScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "AbstractFunctionDeclScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(compactName)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(compactName)'"
     }
 }
 
@@ -171,7 +171,7 @@ public final class SubscriptDeclScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "SubscriptDeclScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(compactName)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(compactName)'"
     }
 }
 
@@ -201,7 +201,7 @@ public final class EnumElementScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "EnumElementScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.name.text)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(syntax.name.text)'"
     }
 }
 
@@ -228,7 +228,7 @@ public final class MacroDeclScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "MacroDeclScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(compactName)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(compactName)'"
     }
 }
 
@@ -256,7 +256,7 @@ public final class MacroDefinitionScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "MacroDefinitionScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -283,7 +283,7 @@ public final class MacroExpansionDeclScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "MacroExpansionDeclScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.macroName.text)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(syntax.macroName.text)'"
     }
 }
 
@@ -311,7 +311,7 @@ public final class CustomAttributeScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "CustomAttributeScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.attributeName.trimmedDescription)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(syntax.attributeName.trimmedDescription)'"
     }
 }
 
@@ -372,7 +372,7 @@ public final class ParameterListScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "ParameterListScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -400,7 +400,7 @@ public final class DefaultArgumentInitializerScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "DefaultArgumentInitializerScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -429,7 +429,7 @@ public final class FunctionBodyScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "FunctionBodyScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -473,12 +473,12 @@ public final class BraceStmtScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "BraceStmtScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         braceRange
     }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -553,10 +553,10 @@ public final class NominalTypeScope: SyntaxScopeProtocol {
     }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(nominalName.text)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(nominalName.text)'"
     }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         switch portion {
         case .whole: return syntax.trimmedRange
         case .where:
@@ -616,25 +616,7 @@ public final class ExtensionScope: SyntaxScopeProtocol {
     }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.extendedType.trimmedDescription)'"
-    }
-
-    public var sourceRange: Range<AbsolutePosition> {
-        switch portion {
-        case .whole:
-            // Mirrors the compiler's `ExtensionScope::moveStartPastExtendedNominal`:
-            // start past the extended type so that resolving the extended
-            // nominal does not recursively re-enter this scope.
-            return syntax.extendedType.trimmedRange
-                .upperBound..<syntax.trimmedRange.upperBound
-        case .where:
-            guard let genericWhereClause else {
-                preconditionFailure(".where portion requires a generic where clause")
-            }
-            return genericWhereClause.trimmedRange
-        case .body:
-            return memberBlock.trimmedRange
-        }
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(syntax.extendedType.trimmedDescription)'"
     }
 }
 
@@ -698,10 +680,10 @@ public final class TypeAliasScope: SyntaxScopeProtocol {
     }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) '\(syntax.name.text)'"
+        "\(scopeTypeDescription) \(lookupRangeDescription) '\(syntax.name.text)'"
     }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         switch portion {
         case .whole:
             return syntax.trimmedRange
@@ -761,19 +743,15 @@ public final class GenericParameterScope: SyntaxScopeProtocol {
         self.parent = parent
     }
 
-    public var sourceRange: Range<AbsolutePosition> {
-        syntax.trimmedRange.upperBound..<holderLookupUpperBound
-    }
-
     public var lookupRange: Range<AbsolutePosition> {
-        sourceRange
+        syntax.trimmedRange.upperBound..<holderLookupUpperBound
     }
 
     public var scopeTypeDescription: String { "GenericParameterScope" }
 
     public var description: String {
         let nameText = introducedName?.text ?? "_"
-        return "\(scopeTypeDescription) \(sourceRangeDescription) '\(nameText)'"
+        return "\(scopeTypeDescription) \(lookupRangeDescription) '\(nameText)'"
     }
 }
 
@@ -816,12 +794,12 @@ public final class CaptureListScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "CaptureListScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         syntax.statements.positionAfterSkippingLeadingTrivia..<syntax.trimmedRange.upperBound
     }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 
     var captureItems: [ClosureCaptureSyntax] {
@@ -854,12 +832,12 @@ public final class ClosureParametersScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "ClosureParametersScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         syntax.statements.positionAfterSkippingLeadingTrivia..<syntax.trimmedRange.upperBound
     }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -890,7 +868,7 @@ public final class IfExprScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "IfExprScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -919,7 +897,7 @@ public final class WhileStmtScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "WhileStmtScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -947,7 +925,7 @@ public final class RepeatWhileScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "RepeatWhileScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -976,7 +954,7 @@ public final class ForEachStmtScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "ForEachStmtScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1003,7 +981,7 @@ public final class ForEachPatternScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "ForEachPatternScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         let lowerBound =
             syntax.whereClause?.trimmedRange.lowerBound
             ?? syntax.body.trimmedRange.lowerBound
@@ -1011,12 +989,8 @@ public final class ForEachPatternScope: SyntaxScopeProtocol {
         return lowerBound..<syntax.body.trimmedRange.upperBound
     }
 
-    public var lookupRange: Range<AbsolutePosition> {
-        sourceRange
-    }
-
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1046,7 +1020,7 @@ public final class DoStmtScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "DoStmtScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1075,7 +1049,7 @@ public final class SwitchExprScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "SwitchExprScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1128,7 +1102,7 @@ public final class CaseStmtScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "CaseStmtScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1175,7 +1149,7 @@ public final class CaseLabelItemScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "CaseLabelItemScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         guard let whereClause = kind.whereClause else {
             return syntax.trimmedRange
         }
@@ -1183,12 +1157,8 @@ public final class CaseLabelItemScope: SyntaxScopeProtocol {
         return whereClause.condition.trimmedRange
     }
 
-    public var lookupRange: Range<AbsolutePosition> {
-        sourceRange
-    }
-
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1223,7 +1193,7 @@ public final class CaseStmtBodyScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "CaseStmtBodyScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
+    public var lookupRange: Range<AbsolutePosition> {
         switch kind {
         case .catchClause(let catchClause):
             return catchClause.body.trimmedRange
@@ -1232,12 +1202,8 @@ public final class CaseStmtBodyScope: SyntaxScopeProtocol {
         }
     }
 
-    public var lookupRange: Range<AbsolutePosition> {
-        sourceRange
-    }
-
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1267,7 +1233,7 @@ public final class GuardStmtScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "GuardStmtScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 
     var lookupUpperBound: AbsolutePosition {
@@ -1307,7 +1273,7 @@ public final class GuardStmtBodyScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "GuardStmtBodyScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1341,7 +1307,7 @@ public final class ConditionalClausePatternUseScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "ConditionalClausePatternUseScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 
     var conditionPattern: PatternSyntax? {
@@ -1378,7 +1344,7 @@ public final class ConditionalClauseInitializerScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "ConditionalClauseInitializerScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1413,12 +1379,8 @@ public final class PatternEntryDeclScope: SyntaxScopeProtocol {
 
     public var scopeTypeDescription: String { "PatternEntryDeclScope" }
 
-    public var sourceRange: Range<AbsolutePosition> {
-        syntax.bindings[bindingIndex].trimmedRange
-    }
-
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription) \(patternEntryDescriptionSuffix)"
+        "\(scopeTypeDescription) \(lookupRangeDescription) \(patternEntryDescriptionSuffix)"
     }
 }
 
@@ -1445,11 +1407,11 @@ public final class PatternEntryInitializerScope: SyntaxScopeProtocol {
 
     public var description: String {
         guard let parent = parent as? PatternEntryDeclScope else {
-            return "\(scopeTypeDescription) \(sourceRangeDescription)"
+            return "\(scopeTypeDescription) \(lookupRangeDescription)"
         }
 
         return
-            "\(scopeTypeDescription) \(sourceRangeDescription) \(parent.patternEntryDescriptionSuffix)"
+            "\(scopeTypeDescription) \(lookupRangeDescription) \(parent.patternEntryDescriptionSuffix)"
     }
 }
 
@@ -1475,7 +1437,7 @@ public final class TryScope: SyntaxScopeProtocol {
     public var scopeTypeDescription: String { "TryScope" }
 
     public var description: String {
-        "\(scopeTypeDescription) \(sourceRangeDescription)"
+        "\(scopeTypeDescription) \(lookupRangeDescription)"
     }
 }
 
@@ -1576,19 +1538,19 @@ private extension PatternEntryDeclScope {
 }
 
 private extension SyntaxScopeProtocol {
-    var sourceRangeDescription: String {
-        let lowerBound = sourceLocationConverter.location(for: sourceRange.lowerBound)
+    var lookupRangeDescription: String {
+        let lowerBound = sourceLocationConverter.location(for: lookupRange.lowerBound)
         let upperBound = sourceLocationConverter.location(for: displayedUpperBound)
 
         return "[\(lowerBound.line):\(lowerBound.column) - \(upperBound.line):\(upperBound.column)]"
     }
 
     var displayedUpperBound: AbsolutePosition {
-        guard sourceRange.lowerBound != sourceRange.upperBound else {
-            return sourceRange.upperBound
+        guard lookupRange.lowerBound != lookupRange.upperBound else {
+            return lookupRange.upperBound
         }
 
-        return AbsolutePosition(utf8Offset: sourceRange.upperBound.utf8Offset - 1)
+        return AbsolutePosition(utf8Offset: lookupRange.upperBound.utf8Offset - 1)
     }
 }
 
