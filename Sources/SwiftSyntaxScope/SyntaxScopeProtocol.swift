@@ -11,7 +11,6 @@ public protocol SyntaxScopeProtocol: AnyObject, CustomStringConvertible {
     var scopeTypeDescription: String { get }
 
     var range: Range<AbsolutePosition> { get }
-    var sourceLocationConverter: SourceLocationConverter { get }
     var lookupParent: (any SyntaxScopeProtocol)? { get }
 
     @discardableResult
@@ -39,14 +38,11 @@ extension SyntaxScopeProtocol {
         syntax.trimmedRange
     }
 
-    public var sourceLocationConverter: SourceLocationConverter {
-        parent?.sourceLocationConverter
-            ?? SourceLocationConverter(fileName: "", tree: syntax.root)
-    }
-
     public var introducedLookupNames: [LookupName] { [] }
 
     public func genericParameters() -> GenericParametersInfo? {
         nil
     }
 }
+
+Syntax().sourceRange(converter: <#T##SourceLocationConverter#>)

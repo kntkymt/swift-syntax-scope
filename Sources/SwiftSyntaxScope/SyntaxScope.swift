@@ -24,7 +24,6 @@ public final class SourceFileScope: SyntaxScopeProtocol {
 
     public var children: [any SyntaxScopeProtocol] = []
     public var isExpanded: Bool = false
-    public lazy var sourceLocationConverter = SourceLocationConverter(fileName: "", tree: syntax)
 
     public var scopeTypeDescription: String { "SourceFileScope" }
 
@@ -1583,8 +1582,9 @@ private extension PatternEntryDeclScope {
 
 private extension SyntaxScopeProtocol {
     var rangeDescription: String {
-        let lowerBound = sourceLocationConverter.location(for: range.lowerBound)
-        let upperBound = sourceLocationConverter.location(for: displayedUpperBound)
+        let converter = SourceLocationConverter(fileName: "", tree: syntax.root)
+        let lowerBound = converter.location(for: range.lowerBound)
+        let upperBound = converter.location(for: displayedUpperBound)
 
         return "[\(lowerBound.line):\(lowerBound.column) - \(upperBound.line):\(upperBound.column)]"
     }
