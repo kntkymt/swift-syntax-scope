@@ -10,7 +10,7 @@ public protocol SyntaxScopeProtocol: AnyObject, CustomStringConvertible {
 
     var scopeTypeDescription: String { get }
 
-    var lookupRange: Range<AbsolutePosition> { get }
+    var range: Range<AbsolutePosition> { get }
     var sourceLocationConverter: SourceLocationConverter { get }
     var lookupParent: (any SyntaxScopeProtocol)? { get }
 
@@ -35,7 +35,7 @@ extension SyntaxScopeProtocol {
         parent
     }
 
-    public var lookupRange: Range<AbsolutePosition> {
+    public var range: Range<AbsolutePosition> {
         syntax.trimmedRange
     }
 

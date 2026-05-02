@@ -40,7 +40,7 @@ extension SourceFileSyntax {
                 current.expandAndBeCurrent()
             }
 
-            guard let child = current.children.last(where: { $0.lookupRange.contains(position) })
+            guard let child = current.children.last(where: { $0.range.contains(position) })
             else {
                 return current
             }
@@ -366,24 +366,6 @@ extension NominalTypeScope {
 }
 
 extension ExtensionScope {
-    public var lookupRange: Range<AbsolutePosition> {
-        switch portion {
-        case .whole:
-            // Mirrors the compiler's `ExtensionScope::moveStartPastExtendedNominal`:
-            // start past the extended type so that resolving the extended
-            // nominal does not recursively re-enter this scope.
-            return syntax.extendedType.trimmedRange
-                .upperBound..<syntax.trimmedRange.upperBound
-        case .where:
-            guard let genericWhereClause else {
-                return syntax.trimmedRange
-            }
-            return genericWhereClause.trimmedRange
-        case .body:
-            return memberBlock.trimmedRange
-        }
-    }
-
     public var introducedLookupNames: [LookupName] {
         switch portion {
         case .whole, .where:
@@ -418,24 +400,6 @@ extension GenericTypeOrExtensionScopeProtocol {
 }
 
 extension PatternEntryDeclScope {
-    public var lookupRange: Range<AbsolutePosition> {
-        let bindingRange = syntax.bindings[bindingIndex].trimmedRange
-
-        guard isLocalBinding else {
-            return bindingRange
-        }
-
-        return bindingRange.lowerBound..<lookupUpperBound
-    }
-
-    var lookupUpperBound: AbsolutePosition {
-        guard isLocalBinding, let parent else {
-            return syntax.trimmedRange.upperBound
-        }
-
-        return parent.lookupRange.upperBound
-    }
-
     public var introducedLookupNames: [LookupName] {
         guard isLocalBinding else {
             return []
@@ -510,10 +474,6 @@ extension CaseStmtBodyScope {
 }
 
 extension ConditionalClausePatternUseScope {
-    public var lookupRange: Range<AbsolutePosition> {
-        syntax.trimmedRange.lowerBound..<lookupUpperBound
-    }
-
     public var introducedLookupNames: [LookupName] {
         guard let conditionPattern else {
             return []
@@ -526,12 +486,6 @@ extension ConditionalClausePatternUseScope {
 extension ConditionalClauseInitializerScope {
     public var lookupParent: (any SyntaxScopeProtocol)? {
         parent?.lookupParent
-    }
-}
-
-extension GuardStmtScope {
-    public var lookupRange: Range<AbsolutePosition> {
-        syntax.trimmedRange.lowerBound..<lookupUpperBound
     }
 }
 
