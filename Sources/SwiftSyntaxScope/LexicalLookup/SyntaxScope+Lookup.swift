@@ -17,7 +17,28 @@ public extension SourceFileSyntax {
         name: Identifier?,
         options: LookupOptions = []
     ) -> [LookupName] {
-        let startScope = findStartingScopeForLookup(position: position)
+        SourceFileScope(syntax: self).lexicalLookup(
+            position: position,
+            name: name,
+            options: options
+        )
+    }
+
+    func findStartingScopeForLookup(position: AbsolutePosition)
+    -> any SyntaxScopeProtocol
+    {
+        SourceFileScope(syntax: self).findStartingScopeForLookup(position: position)
+    }
+}
+
+public extension SourceFileScope {
+    // entry of lookup
+    func lexicalLookup(
+        position: AbsolutePosition,
+        name: Identifier?,
+        options: LookupOptions = []
+    ) -> [LookupName] {
+        let startScope = self.findStartingScopeForLookup(position: position)
 
         let results = startScope.lookup(
             name: name,
@@ -31,9 +52,9 @@ public extension SourceFileSyntax {
     }
 
     func findStartingScopeForLookup(position: AbsolutePosition)
-        -> any SyntaxScopeProtocol
+    -> any SyntaxScopeProtocol
     {
-        var current: any SyntaxScopeProtocol = SourceFileScope(syntax: self)
+        var current: any SyntaxScopeProtocol = self
 
         while true {
             if !current.isExpanded {
