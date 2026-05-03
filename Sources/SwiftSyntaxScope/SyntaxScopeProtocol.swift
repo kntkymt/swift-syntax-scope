@@ -43,6 +43,24 @@ extension SyntaxScopeProtocol {
     public func genericParameters() -> GenericParametersInfo? {
         nil
     }
+
+    public func sourceRange(
+        converter: SourceLocationConverter,
+        afterLeadingTrivia: Bool = true,
+        afterTrailingTrivia: Bool = false
+    ) -> SourceRange {
+        SourceRange(
+            start: converter.location(for: range.lowerBound),
+            end: converter.location(for: range.upperBound)
+        )
+    }
 }
 
-Syntax().sourceRange(converter: <#T##SourceLocationConverter#>)
+extension SourceRange {
+    var description: String {
+        // SourceRange uses half-open (..<) semantics; render the upper bound
+        // inclusively for display.
+        let displayedEndColumn = start == end ? end.column : end.column - 1
+        return "[\(start.line):\(start.column) - \(end.line):\(displayedEndColumn)]"
+    }
+}

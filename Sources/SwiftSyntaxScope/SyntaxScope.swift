@@ -1583,18 +1583,7 @@ private extension PatternEntryDeclScope {
 private extension SyntaxScopeProtocol {
     var rangeDescription: String {
         let converter = SourceLocationConverter(fileName: "", tree: syntax.root)
-        let lowerBound = converter.location(for: range.lowerBound)
-        let upperBound = converter.location(for: displayedUpperBound)
-
-        return "[\(lowerBound.line):\(lowerBound.column) - \(upperBound.line):\(upperBound.column)]"
-    }
-
-    var displayedUpperBound: AbsolutePosition {
-        guard range.lowerBound != range.upperBound else {
-            return range.upperBound
-        }
-
-        return AbsolutePosition(utf8Offset: range.upperBound.utf8Offset - 1)
+        return sourceRange(converter: converter).description
     }
 }
 
