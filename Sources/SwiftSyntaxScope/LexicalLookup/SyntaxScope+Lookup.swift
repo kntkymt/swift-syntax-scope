@@ -10,9 +10,9 @@ public struct LookupOptions: OptionSet, Sendable {
     public static let includeOuterResults = Self(rawValue: 1 << 0)
 }
 
-extension SourceFileSyntax {
+public extension SourceFileSyntax {
     // entry of lookup
-    public func lexicalLookup(
+    func lexicalLookup(
         position: AbsolutePosition,
         name: Identifier?,
         options: LookupOptions = []
