@@ -19,7 +19,7 @@ func run(values: [Int]) {
 
 // SyntaxScope tree dump:
 //
-// SourceFileScope [1:1 - 49:56]
+// SourceFileScope [1:1 - 50:0]
 // `-AbstractFunctionDeclScope [1:1 - 18:1] 'run(values:)'
 //   |-CustomAttributeScope [1:1 - 1:10] 'MainActor'
 //   |-ParameterListScope [2:9 - 2:23]
@@ -28,7 +28,7 @@ func run(values: [Int]) {
 //       |-ForEachStmtScope [3:5 - 6:5]
 //       | `-ForEachPatternScope [3:21 - 6:5] introduces=[identifier:n]
 //       |   `-BraceStmtScope [3:33 - 6:5]
-//       |     `-PatternEntryDeclScope [4:13 - 4:46] entry 0 introduces=[identifier:mapped]
+//       |     `-PatternEntryDeclScope [4:13 - 6:5] entry 0 introduces=[identifier:mapped]
 //       |       `-PatternEntryInitializerScope [4:22 - 4:46] entry 0
 //       |         `-ClosureParametersScope [4:40 - 4:46] introduces=[identifier:x]
 //       |           `-BraceStmtScope [4:40 - 4:46]

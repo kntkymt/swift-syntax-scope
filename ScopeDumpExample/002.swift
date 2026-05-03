@@ -21,8 +21,8 @@ extension Box where T: Comparable {
 
 // SyntaxScope tree dump:
 //
-// SourceFileScope [1:1 - 48:47]
-// |-NominalTypeDeclScope [1:1 - 10:1] 'Box' introduces=[declaration:Box]
+// SourceFileScope [1:1 - 49:0]
+// |-NominalTypeDeclScope [1:1 - 10:1] 'Box'
 // | `-GenericParameterScope [1:13 - 10:1] 'T' introduces=[identifier:T]
 // |   |-NominalTypeWhereScope [1:15 - 1:32] 'Box'
 // |   `-NominalTypeBodyScope [1:34 - 10:1] 'Box' introduces=[declaration:unwrap, identifier:value]
@@ -31,8 +31,8 @@ extension Box where T: Comparable {
 // |       |-ParameterListScope [4:16 - 4:32]
 // |       `-FunctionBodyScope [4:39 - 9:5] introduces=[identifier:fallback, implicit:self]
 // |         `-BraceStmtScope [4:39 - 9:5]
-// |           `-GuardStmtScope [5:9 - 7:9]
-// |             `-ConditionalClausePatternUseScope [5:15 - 5:37] introduces=[identifier:resolved]
+// |           `-GuardStmtScope [5:9 - 9:5]
+// |             `-ConditionalClausePatternUseScope [5:15 - 9:5] introduces=[identifier:resolved]
 // |               |-ConditionalClauseInitializerScope [5:28 - 5:37]
 // |               `-GuardStmtBodyScope [5:44 - 7:9]
 // |                 `-BraceStmtScope [5:44 - 7:9]

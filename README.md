@@ -108,18 +108,18 @@ func process(value: Int) {
 The output is:
 
 ```
-SourceFileScope [1:1 - 11:2]
+SourceFileScope [1:1 - 12:0]
 `-AbstractFunctionDeclScope [1:1 - 11:1] 'process(value:)'
   |-ParameterListScope [1:13 - 1:24]
   `-FunctionBodyScope [1:26 - 11:1] introduces=[identifier:value]
     `-BraceStmtScope [1:26 - 11:1]
-      `-PatternEntryDeclScope [2:9 - 2:22] entry 0 introduces=[identifier:threshold]
+      `-PatternEntryDeclScope [2:9 - 11:1] entry 0 introduces=[identifier:threshold]
         |-PatternEntryInitializerScope [2:21 - 2:22] entry 0
-        `-PatternEntryDeclScope [3:9 - 3:27] entry 0 introduces=[identifier:doubled]
+        `-PatternEntryDeclScope [3:9 - 11:1] entry 0 introduces=[identifier:doubled]
           |-PatternEntryInitializerScope [3:19 - 3:27] entry 0
           `-IfExprScope [5:5 - 10:5]
             |-BraceStmtScope [5:28 - 8:5]
-            | `-PatternEntryDeclScope [6:13 - 6:33] entry 0 introduces=[identifier:doubled]
+            | `-PatternEntryDeclScope [6:13 - 8:5] entry 0 introduces=[identifier:doubled]
             |   `-PatternEntryInitializerScope [6:23 - 6:33] entry 0
             `-BraceStmtScope [8:12 - 10:5]
 ```
