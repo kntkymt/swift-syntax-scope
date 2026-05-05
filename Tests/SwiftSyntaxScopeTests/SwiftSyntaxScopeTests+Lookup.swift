@@ -26,17 +26,25 @@ extension SwiftSyntaxScopeTests {
     func lookupTopLevelGlobalBindings() {
         assertLexicalNameLookup(
             source: """
-                let /*1️⃣*/first = 1
-                let /*2️⃣*/second = 2
+                /*S1*/let /*1️⃣*/first = 1
+                /*S2*/let /*2️⃣*/second = 2
 
                 let third = /*3️⃣*/second + /*4️⃣*/first
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "second", atMarker: "2️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "second", atMarker: "2️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "first", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "first", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -68,14 +76,30 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "2️⃣",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "value", atMarker: "4️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "4️⃣",
+                        names: [.init(name: "value", atMarker: "4️⃣", kind: .identifier)]
+                    )
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "6️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "6️⃣",
+                        names: [.init(name: "a", atMarker: "6️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -88,13 +112,13 @@ extension SwiftSyntaxScopeTests {
                 func f() {
                     let /*1️⃣*/a = 1
 
-                    if let /*2️⃣*/a = maybeValue() {
+                    if /*S1*/let /*2️⃣*/a = maybeValue() {
                         let _ = /*3️⃣*/a
                     } else {
                         let _ = /*4️⃣*/a
                     }
 
-                    while let /*5️⃣*/a = maybeValue() {
+                    while /*S2*/let /*5️⃣*/a = maybeValue() {
                         let _ = /*6️⃣*/a
                     }
 
@@ -103,18 +127,42 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "5️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "a", atMarker: "5️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -124,7 +172,7 @@ extension SwiftSyntaxScopeTests {
                 func f() {
                     let /*1️⃣*/a = 1
 
-                    while let /*2️⃣*/a = maybeValue(), let b = maybeValue(/*3️⃣*/a) {
+                    while /*S1*/let /*2️⃣*/a = maybeValue(), let b = maybeValue(/*3️⃣*/a) {
                         _ = b
                     }
 
@@ -136,11 +184,23 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -153,13 +213,13 @@ extension SwiftSyntaxScopeTests {
                 func f() {
                     let /*1️⃣*/a = 1
 
-                    guard let /*2️⃣*/a = maybeValue(), let b = maybeValue(/*3️⃣*/a) else {
+                    guard /*S1*/let /*2️⃣*/a = maybeValue(), let b = maybeValue(/*3️⃣*/a) else {
                         return
                     }
 
                     _ = b
 
-                    guard let /*4️⃣*/a = maybeValue() else {
+                    guard /*S2*/let /*4️⃣*/a = maybeValue() else {
                         let _ = /*5️⃣*/a
                         return
                     }
@@ -169,18 +229,46 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "4️⃣", kind: .identifier),
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "a", atMarker: "4️⃣", kind: .identifier)]
+                    ),
                     outer: [
-                        .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                        .init(name: "a", atMarker: "1️⃣", kind: .identifier),
+                        .init(
+                            kind: .fromScope,
+                            atMarker: "S1",
+                            names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                        ),
+                        .init(
+                            kind: .fromScope,
+                            atMarker: "1️⃣",
+                            names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                        ),
                     ]
                 ),
             ]
@@ -189,7 +277,7 @@ extension SwiftSyntaxScopeTests {
         assertLexicalNameLookup(
             source: """
                 func f() {
-                    guard case let /*1️⃣*/a = maybeValue() else {
+                    guard /*S1*/case let /*1️⃣*/a = maybeValue() else {
                         return
                     }
 
@@ -198,7 +286,11 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 )
             ]
         )
@@ -222,11 +314,23 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "2️⃣",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -237,7 +341,7 @@ extension SwiftSyntaxScopeTests {
                     let /*1️⃣*/a = 1
 
                     do {
-                    } catch let /*2️⃣*/a /*3️⃣*/where check(/*4️⃣*/a) {
+                    } catch let /*2️⃣*/a /*3️⃣*/where /*S1*/check(/*4️⃣*/a) {
                         _ = a
                     }
 
@@ -254,14 +358,30 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "error", atMarker: "5️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "5️⃣",
+                        names: [.init(name: "error", atMarker: "5️⃣", kind: .implicit)]
+                    )
                 ),
                 "7️⃣": .init(notFound: "error"),
             ]
@@ -279,7 +399,7 @@ extension SwiftSyntaxScopeTests {
                         _ = a
                     }
 
-                    for /*3️⃣*/a in maybeValues() where /*4️⃣*/a > 0 {
+                    for /*3️⃣*/a in maybeValues() /*S1*/where /*4️⃣*/a > 0 {
                         _ = a
                     }
 
@@ -288,14 +408,30 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "3️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "3️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -311,11 +447,23 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "2️⃣",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -330,8 +478,8 @@ extension SwiftSyntaxScopeTests {
 
                     switch value {
                     case let /*2️⃣*/a:
-                        let _ = /*3️⃣*/a
-                    case let /*4️⃣*/a where check(/*5️⃣*/a):
+                        /*S1*/let _ = /*3️⃣*/a
+                    case let /*4️⃣*/a where /*S2*/check(/*5️⃣*/a):
                         _ = a
                     default:
                         let _ = /*6️⃣*/a
@@ -342,18 +490,42 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "4️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "a", atMarker: "4️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -363,7 +535,7 @@ extension SwiftSyntaxScopeTests {
                 func f() {
                     switch value {
                     case let /*1️⃣*/a, let /*2️⃣*/a:
-                        let _ = /*3️⃣*/a
+                        /*S1*/let _ = /*3️⃣*/a
                     case let b, let c:
                         let _ = /*4️⃣*/b
                         let _ = /*5️⃣*/c
@@ -374,7 +546,11 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(notFound: "b"),
                 "5️⃣": .init(notFound: "c"),
@@ -389,11 +565,11 @@ extension SwiftSyntaxScopeTests {
                 func f() {
                     switch value {
                     case .a(let /*1️⃣*/a):
-                        let _ = /*2️⃣*/a
+                        /*S1*/let _ = /*2️⃣*/a
                     case let .b(/*3️⃣*/b):
-                        let _ = /*4️⃣*/b
+                        /*S2*/let _ = /*4️⃣*/b
                     case let .c(/*5️⃣*/c), let .d(/*6️⃣*/c):
-                        let _ = /*7️⃣*/c
+                        /*S3*/let _ = /*7️⃣*/c
                     default:
                         break
                     }
@@ -401,13 +577,25 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "b", atMarker: "3️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "b", atMarker: "3️⃣", kind: .identifier)]
+                    )
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "c", atMarker: "5️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S3",
+                        names: [.init(name: "c", atMarker: "5️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -417,13 +605,13 @@ extension SwiftSyntaxScopeTests {
     func lookupFunctionParameters() {
         assertLexicalNameLookup(
             source: """
-                let /*1️⃣*/outer = 1
+                /*S1*/let /*1️⃣*/outer = 1
 
-                func f(/*2️⃣*/a: Int, b: Int = /*3️⃣*/a, c: Int = /*4️⃣*/outer) {
+                func f(/*2️⃣*/a: Int, b: Int = /*3️⃣*/a, c: Int = /*4️⃣*/outer) /*S2*/{
                     let _ = /*5️⃣*/a
                 }
 
-                func g(/*6️⃣*/a: Int) {
+                func g(/*6️⃣*/a: Int) /*S3*/{
                     let /*7️⃣*/a = 10
                     let _ = /*8️⃣*/a
                 }
@@ -431,14 +619,30 @@ extension SwiftSyntaxScopeTests {
             references: [
                 "3️⃣": .init(notFound: "a"),
                 "4️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "2️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "a", atMarker: "2️⃣", kind: .identifier)]
+                    )
                 ),
                 "8️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "7️⃣", kind: .identifier),
-                    outer: [.init(name: "a", atMarker: "6️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "7️⃣",
+                        names: [.init(name: "a", atMarker: "7️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "S3",
+                        names: [.init(name: "a", atMarker: "6️⃣", kind: .identifier)]
+                    )]
                 ),
             ]
         )
@@ -452,15 +656,15 @@ extension SwiftSyntaxScopeTests {
                     let /*1️⃣*/b = 1
 
                     let shorthand = { /*2️⃣*/p in
-                        let _ = /*3️⃣*/p
+                        /*S1*/let _ = /*3️⃣*/p
                     }
 
                     let full = { (/*4️⃣*/x: Int, _ y: Int) in
-                        let _ = /*5️⃣*/x
+                        /*S2*/let _ = /*5️⃣*/x
                     }
 
                     let shadowing = { /*6️⃣*/b in
-                        let _ = /*7️⃣*/b
+                        /*S3*/let _ = /*7️⃣*/b
                     }
 
                     let _ = /*8️⃣*/p
@@ -468,14 +672,30 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "p", atMarker: "2️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "p", atMarker: "2️⃣", kind: .identifier)]
+                    )
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "x", atMarker: "4️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "x", atMarker: "4️⃣", kind: .identifier)]
+                    )
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "b", atMarker: "6️⃣", kind: .identifier),
-                    outer: [.init(name: "b", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S3",
+                        names: [.init(name: "b", atMarker: "6️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "b", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "8️⃣": .init(notFound: "p"),
             ]
@@ -496,15 +716,35 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "2️⃣", kind: .identifier),
-                    outer: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "3️⃣",
+                        names: [.init(name: "outer", atMarker: "2️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "4️⃣", kind: .identifier),
-                    outer: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "5️⃣",
+                        names: [.init(name: "outer", atMarker: "4️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -519,13 +759,13 @@ extension SwiftSyntaxScopeTests {
                     return b
                 }
 
-                struct Box</*3️⃣*/U> {
+                struct Box</*3️⃣*/U> /*S1*/{
                     func unwrap() -> /*4️⃣*/U {
                         fatalError()
                     }
                 }
 
-                extension Container</*5️⃣*/V> {
+                extension Container</*5️⃣*/V> /*S2*/{
                     func unwrap() -> /*6️⃣*/V {
                         fatalError()
                     }
@@ -539,26 +779,46 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "T", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "T", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "U", atMarker: "3️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "U", atMarker: "3️⃣", kind: .identifier)]
+                    )
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "V", atMarker: "5️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "V", atMarker: "5️⃣", kind: .identifier)]
+                    )
                 ),
                 "8️⃣": .init(
-                    innerMost: .init(name: "A", atMarker: "7️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "7️⃣",
+                        names: [.init(name: "A", atMarker: "7️⃣", kind: .identifier)]
+                    )
                 ),
                 "🔟": .init(
-                    innerMost: .init(name: "W", atMarker: "9️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "9️⃣",
+                        names: [.init(name: "W", atMarker: "9️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
 
         assertLexicalNameLookup(
             source: """
-                let /*1️⃣*/outer = 1
+                /*S1*/let /*1️⃣*/outer = 1
 
                 struct S {
                     init</*2️⃣*/Z>(value: Z) {
@@ -572,10 +832,18 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "Z", atMarker: "2️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "2️⃣",
+                        names: [.init(name: "Z", atMarker: "2️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -587,20 +855,32 @@ extension SwiftSyntaxScopeTests {
             source: """
                 typealias Foo</*1️⃣*/T> = Array</*2️⃣*/T> where /*3️⃣*/T: Equatable
 
-                func f() {
+                func f() /*S1*/{
                     typealias /*4️⃣*/Alias = Int
                     let x: /*5️⃣*/Alias = 0
                 }
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "T", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "T", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "3️⃣": .init(
-                    innerMost: .init(name: "T", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "T", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "Alias", atMarker: "4️⃣", kind: .declaration)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "Alias", atMarker: "4️⃣", kind: .declaration)]
+                    )
                 ),
             ]
         )
@@ -611,7 +891,7 @@ extension SwiftSyntaxScopeTests {
         assertLexicalNameLookup(
             source: """
                 struct S {
-                    init(/*1️⃣*/value: Int) {
+                    init(/*1️⃣*/value: Int) /*S1*/{
                         let _ = /*2️⃣*/value
                     }
                 }
@@ -624,7 +904,11 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "value", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "value", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "3️⃣": .init(notFound: "value"),
             ]
@@ -635,7 +919,7 @@ extension SwiftSyntaxScopeTests {
     func lookupNominalTypeNames() {
         assertLexicalNameLookup(
             source: """
-                struct /*1️⃣*/Outer {
+                struct /*1️⃣*/Outer /*S1*/{
                     struct /*2️⃣*/Inner {
                         func makeOuter() {
                             let _ = /*3️⃣*/Outer()
@@ -647,7 +931,7 @@ extension SwiftSyntaxScopeTests {
                     }
                 }
 
-                struct /*5️⃣*/A {
+                struct /*5️⃣*/A /*S2*/{
                     struct /*6️⃣*/A {
                         func f() {
                             let _ = /*7️⃣*/A()
@@ -663,10 +947,18 @@ extension SwiftSyntaxScopeTests {
             references: [
                 "3️⃣": .init(notFound: "Outer"),
                 "4️⃣": .init(
-                    innerMost: .init(name: "Inner", atMarker: "2️⃣", kind: .declaration)
+                    innerMost: .init(
+                        kind: .fromMembers,
+                        atMarker: "S1",
+                        names: [.init(name: "Inner", atMarker: "2️⃣", kind: .declaration)]
+                    )
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "A", atMarker: "6️⃣", kind: .declaration)
+                    innerMost: .init(
+                        kind: .fromMembers,
+                        atMarker: "S2",
+                        names: [.init(name: "A", atMarker: "6️⃣", kind: .declaration)]
+                    )
                 ),
                 "8️⃣": .init(notFound: "c"),
             ]
@@ -677,7 +969,7 @@ extension SwiftSyntaxScopeTests {
     func lookupTypeMembers() {
         assertLexicalNameLookup(
             source: """
-                extension Foo {
+                extension Foo /*S1*/{
                     func /*1️⃣*/helper() {
                     }
 
@@ -689,7 +981,7 @@ extension SwiftSyntaxScopeTests {
                     }
                 }
 
-                extension Bar where T: Equatable {
+                extension Bar where T: Equatable /*S2*/{
                     func /*5️⃣*/helperW() {
                     }
 
@@ -698,23 +990,39 @@ extension SwiftSyntaxScopeTests {
                     }
                 }
 
-                protocol P {
+                protocol P /*S3*/{
                     associatedtype /*7️⃣*/Item
                     typealias Copy = /*8️⃣*/Item
                 }
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "helper", atMarker: "1️⃣", kind: .declaration)
+                    innerMost: .init(
+                        kind: .fromMembers,
+                        atMarker: "S1",
+                        names: [.init(name: "helper", atMarker: "1️⃣", kind: .declaration)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "computed", atMarker: "2️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromMembers,
+                        atMarker: "S1",
+                        names: [.init(name: "computed", atMarker: "2️⃣", kind: .identifier)]
+                    )
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "helperW", atMarker: "5️⃣", kind: .declaration)
+                    innerMost: .init(
+                        kind: .fromMembers,
+                        atMarker: "S2",
+                        names: [.init(name: "helperW", atMarker: "5️⃣", kind: .declaration)]
+                    )
                 ),
                 "8️⃣": .init(
-                    innerMost: .init(name: "Item", atMarker: "7️⃣", kind: .declaration)
+                    innerMost: .init(
+                        kind: .fromMembers,
+                        atMarker: "S3",
+                        names: [.init(name: "Item", atMarker: "7️⃣", kind: .declaration)]
+                    )
                 ),
             ]
         )
@@ -735,11 +1043,23 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "value", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "value", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "value", atMarker: "3️⃣", kind: .identifier),
-                    outer: [.init(name: "value", atMarker: "1️⃣", kind: .identifier)]
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "3️⃣",
+                        names: [.init(name: "value", atMarker: "3️⃣", kind: .identifier)]
+                    ),
+                    outer: [.init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "value", atMarker: "1️⃣", kind: .identifier)]
+                    )]
                 ),
             ]
         )
@@ -749,7 +1069,7 @@ extension SwiftSyntaxScopeTests {
     func lookupCustomAttributeArguments() {
         assertLexicalNameLookup(
             source: """
-                let /*1️⃣*/outer = 0
+                /*S1*/let /*1️⃣*/outer = 0
 
                 @Wrapper(value: /*2️⃣*/outer)
                 func fn() {}
@@ -763,7 +1083,7 @@ extension SwiftSyntaxScopeTests {
                 @Wrapper(value: /*5️⃣*/outer)
                 extension X {}
 
-                func g(/*6️⃣*/p: Int) {
+                func g(/*6️⃣*/p: Int) /*S2*/{
                     @Wrapper(value: /*7️⃣*/p)
                     func nested() {}
                 }
@@ -778,22 +1098,46 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "3️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "p", atMarker: "6️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "p", atMarker: "6️⃣", kind: .identifier)]
+                    )
                 ),
                 "9️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "🔟": .init(notFound: "SType"),
             ]
@@ -804,9 +1148,9 @@ extension SwiftSyntaxScopeTests {
     func lookupMacro() {
         assertLexicalNameLookup(
             source: """
-                let /*1️⃣*/outer = 0
+                /*S0*/let /*1️⃣*/outer = 0
 
-                macro paramMacro(/*2️⃣*/value: Int) -> Int = /*3️⃣*/value
+                /*S1*/macro paramMacro(/*2️⃣*/value: Int) -> Int = /*3️⃣*/value
                 macro genericMacro</*4️⃣*/T>(value: T) -> T = /*5️⃣*/T.self
                 macro outerMacro() = /*6️⃣*/outer
 
@@ -817,19 +1161,39 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "3️⃣": .init(
-                    innerMost: .init(name: "value", atMarker: "2️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "value", atMarker: "2️⃣", kind: .identifier)]
+                    )
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "T", atMarker: "4️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "4️⃣",
+                        names: [.init(name: "T", atMarker: "4️⃣", kind: .identifier)]
+                    )
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S0",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "7️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S0",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "8️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S0",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -839,7 +1203,7 @@ extension SwiftSyntaxScopeTests {
     func lookupImplicitSelfType() {
         assertLexicalNameLookup(
             source: """
-                protocol /*1️⃣*/P where /*2️⃣*/Self: Equatable {
+                /*S1*/protocol /*1️⃣*/P where /*2️⃣*/Self: Equatable {
                     func f() {
                         let _ = /*3️⃣*/Self
                     }
@@ -847,7 +1211,7 @@ extension SwiftSyntaxScopeTests {
 
                 struct Foo {}
 
-                /*4️⃣*/extension Foo {
+                /*4️⃣*/extension Foo /*S2*/{
                     func bar() {
                         let _ = /*5️⃣*/Self
                     }
@@ -855,13 +1219,25 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "Self", atMarker: "1️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "Self", atMarker: "1️⃣", kind: .implicit)]
+                    )
                 ),
                 "3️⃣": .init(
-                    innerMost: .init(name: "Self", atMarker: "1️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "Self", atMarker: "1️⃣", kind: .implicit)]
+                    )
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "Self", atMarker: "4️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S2",
+                        names: [.init(name: "Self", atMarker: "4️⃣", kind: .implicit)]
+                    )
                 ),
             ]
         )
@@ -872,7 +1248,7 @@ extension SwiftSyntaxScopeTests {
         assertLexicalNameLookup(
             source: """
                 class C {
-                    func /*1️⃣*/method() {
+                    func /*1️⃣*/method() /*S1*/{
                         let _ = /*2️⃣*/self
                     }
                 }
@@ -883,7 +1259,11 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "self", atMarker: "1️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "self", atMarker: "1️⃣", kind: .implicit)]
+                    )
                 ),
                 "3️⃣": .init(notFound: "self"),
             ]
@@ -909,19 +1289,19 @@ extension SwiftSyntaxScopeTests {
                     }
 
                     var implicitSetter: Int = 0 {
-                        /*5️⃣*/set {
+                        /*5️⃣*/set /*Sa*/{
                             print(/*6️⃣*/newValue)
                         }
                     }
 
                     var willSetVar: Int = 0 {
-                        /*7️⃣*/willSet {
+                        /*7️⃣*/willSet /*Sb*/{
                             print(/*8️⃣*/newValue)
                         }
                     }
 
                     var didSetVar: Int = 0 {
-                        /*9️⃣*/didSet {
+                        /*9️⃣*/didSet /*Sc*/{
                             print(/*🔟*/oldValue)
                         }
                     }
@@ -929,19 +1309,39 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "local", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "1️⃣",
+                        names: [.init(name: "local", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "localG", atMarker: "3️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "3️⃣",
+                        names: [.init(name: "localG", atMarker: "3️⃣", kind: .identifier)]
+                    )
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "newValue", atMarker: "5️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sa",
+                        names: [.init(name: "newValue", atMarker: "5️⃣", kind: .implicit)]
+                    )
                 ),
                 "8️⃣": .init(
-                    innerMost: .init(name: "newValue", atMarker: "7️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sb",
+                        names: [.init(name: "newValue", atMarker: "7️⃣", kind: .implicit)]
+                    )
                 ),
                 "🔟": .init(
-                    innerMost: .init(name: "oldValue", atMarker: "9️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sc",
+                        names: [.init(name: "oldValue", atMarker: "9️⃣", kind: .implicit)]
+                    )
                 ),
             ]
         )
@@ -950,13 +1350,13 @@ extension SwiftSyntaxScopeTests {
             source: """
                 struct S {
                     var explicitSetter: Int = 0 {
-                        set(/*1️⃣*/newX) {
+                        set(/*1️⃣*/newX) /*Sa*/{
                             print(/*2️⃣*/newX)
                         }
                     }
 
                     var explicitDidSet: Int = 0 {
-                        didSet(/*3️⃣*/old) {
+                        didSet(/*3️⃣*/old) /*Sb*/{
                             print(/*4️⃣*/old)
                         }
                     }
@@ -987,10 +1387,18 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "newX", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sa",
+                        names: [.init(name: "newX", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "4️⃣": .init(
-                    innerMost: .init(name: "old", atMarker: "3️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sb",
+                        names: [.init(name: "old", atMarker: "3️⃣", kind: .identifier)]
+                    )
                 ),
                 "5️⃣": .init(notFound: "newValue"),
                 "6️⃣": .init(notFound: "newValue"),
@@ -1004,19 +1412,19 @@ extension SwiftSyntaxScopeTests {
         assertLexicalNameLookup(
             source: """
                 struct S {
-                    subscript(/*1️⃣*/a: Int) -> Int {
+                    /*Sa*/subscript(/*1️⃣*/a: Int) -> Int {
                         get { return /*2️⃣*/a }
                         set {}
                     }
 
-                    subscript(/*3️⃣*/b: Int, _: Bool) -> Int {
+                    /*Sb*/subscript(/*3️⃣*/b: Int, _: Bool) -> Int {
                         get { return 0 }
-                        /*4️⃣*/set {
+                        /*4️⃣*/set /*Sset*/{
                             print(/*5️⃣*/b, /*6️⃣*/newValue)
                         }
                     }
 
-                    subscript(/*7️⃣*/c: Int, _: String) -> Int { /*8️⃣*/c }
+                    /*Sc*/subscript(/*7️⃣*/c: Int, _: String) -> Int { /*8️⃣*/c }
 
                     subscript</*9️⃣*/U>(d: U) -> Int where U: Equatable {
                         get { let x: /*🔟*/U? = nil; return 0 }
@@ -1025,19 +1433,39 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "a", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sa",
+                        names: [.init(name: "a", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "5️⃣": .init(
-                    innerMost: .init(name: "b", atMarker: "3️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sb",
+                        names: [.init(name: "b", atMarker: "3️⃣", kind: .identifier)]
+                    )
                 ),
                 "6️⃣": .init(
-                    innerMost: .init(name: "newValue", atMarker: "4️⃣", kind: .implicit)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sset",
+                        names: [.init(name: "newValue", atMarker: "4️⃣", kind: .implicit)]
+                    )
                 ),
                 "8️⃣": .init(
-                    innerMost: .init(name: "c", atMarker: "7️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "Sc",
+                        names: [.init(name: "c", atMarker: "7️⃣", kind: .identifier)]
+                    )
                 ),
                 "🔟": .init(
-                    innerMost: .init(name: "U", atMarker: "9️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "9️⃣",
+                        names: [.init(name: "U", atMarker: "9️⃣", kind: .identifier)]
+                    )
                 ),
             ]
         )
@@ -1062,7 +1490,7 @@ extension SwiftSyntaxScopeTests {
     func lookupEnumCase() {
         assertLexicalNameLookup(
             source: """
-                let /*1️⃣*/outer = 0
+                /*S1*/let /*1️⃣*/outer = 0
                 enum E {
                     case fromOuter(x: Int = /*2️⃣*/outer)
                     case sibling(x: Int = 0, y: Int = /*3️⃣*/x)
@@ -1074,7 +1502,11 @@ extension SwiftSyntaxScopeTests {
                 """,
             references: [
                 "2️⃣": .init(
-                    innerMost: .init(name: "outer", atMarker: "1️⃣", kind: .identifier)
+                    innerMost: .init(
+                        kind: .fromScope,
+                        atMarker: "S1",
+                        names: [.init(name: "outer", atMarker: "1️⃣", kind: .identifier)]
+                    )
                 ),
                 "3️⃣": .init(notFound: "x"),
                 "4️⃣": .init(notFound: "bareCase"),
@@ -1117,16 +1549,28 @@ extension SwiftSyntaxScopeTests {
         let kind: LookupName.Kind
     }
 
+    struct LookupResultRef {
+        enum Kind {
+            case fromScope
+            case fromMembers
+        }
+
+        let kind: Kind
+        /// Marker placed at the scope's `range.lowerBound`.
+        let atMarker: String
+        let names: [LookupNameRef]
+    }
+
     struct LookupReference {
-        let innerMost: LookupNameRef?
-        let outer: [LookupNameRef]
+        let innerMost: LookupResultRef?
+        let outer: [LookupResultRef]
         private let notFoundName: StaticString?
 
         var lookupName: StaticString {
-            innerMost?.name ?? notFoundName!
+            innerMost?.names.first?.name ?? notFoundName!
         }
 
-        init(innerMost: LookupNameRef, outer: [LookupNameRef] = []) {
+        init(innerMost: LookupResultRef, outer: [LookupResultRef] = []) {
             self.innerMost = innerMost
             self.outer = outer
             self.notFoundName = nil
@@ -1190,6 +1634,16 @@ private extension SwiftSyntaxScopeTests.LookupNameRef {
     }
 }
 
+private extension SwiftSyntaxScopeTests.LookupResultRef {
+    func asRecord(in parsed: SwiftSyntaxScopeTests.MarkedTestSource) -> LookupResultRecord {
+        LookupResultRecord(
+            kind: kind,
+            scopeStart: parsed.position(of: atMarker),
+            names: names.map { $0.asRecord(in: parsed) }
+        )
+    }
+}
+
 private extension SwiftSyntaxScopeTests {
     typealias UnsupportedLookupTestCase = (source: String, name: StaticString)
 
@@ -1198,14 +1652,14 @@ private extension SwiftSyntaxScopeTests {
         position: AbsolutePosition,
         name: StaticString? = nil,
         options: LookupOptions = []
-    ) -> [LookupNameRecord] {
+    ) -> [LookupResultRecord] {
         let results = sourceFile.lexicalLookup(
             position: position,
             name: name.map { Identifier(canonicalName: $0) },
             options: options
         )
 
-        return results.flatMap(\.names).map(LookupNameRecord.init)
+        return results.map(LookupResultRecord.init)
     }
 
     static func extractMarkers(from syntax: SourceFileSyntax) -> [String: AbsolutePosition] {
@@ -1365,4 +1819,44 @@ struct LookupNameRecord: Equatable {
         self.position = lookup.position
         self.kind = lookup.kind
     }
+}
+
+struct LookupResultRecord: Equatable {
+    let kind: SwiftSyntaxScopeTests.LookupResultRef.Kind
+    let scopeStart: AbsolutePosition
+    let names: [LookupNameRecord]
+
+    init(
+        kind: SwiftSyntaxScopeTests.LookupResultRef.Kind,
+        scopeStart: AbsolutePosition,
+        names: [LookupNameRecord]
+    ) {
+        self.kind = kind
+        self.scopeStart = scopeStart
+        self.names = names
+    }
+
+    init(_ result: LookupResult) {
+        switch result {
+        case .fromScope(let scope, let names):
+            self.kind = .fromScope
+            self.scopeStart = lookupTestAnchor(of: scope)
+            self.names = names.map(LookupNameRecord.init)
+        case .fromMembers(let scope, let names):
+            self.kind = .fromMembers
+            self.scopeStart = lookupTestAnchor(of: scope)
+            self.names = names.map(LookupNameRecord.init)
+        }
+    }
+}
+
+/// Anchor position used to identify a scope from a test marker. Defaults to
+/// `range.lowerBound`, but a few scopes whose range start does not align with
+/// any token boundary expose their syntax node's start instead so that tests
+/// can mark them with a comment.
+private func lookupTestAnchor(of scope: any SyntaxScopeProtocol) -> AbsolutePosition {
+    if let scope = scope as? GenericParameterScope {
+        return scope.syntax.positionAfterSkippingLeadingTrivia
+    }
+    return scope.range.lowerBound
 }
