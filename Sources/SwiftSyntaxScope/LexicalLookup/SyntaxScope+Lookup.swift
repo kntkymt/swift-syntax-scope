@@ -16,7 +16,7 @@ public extension SourceFileSyntax {
         position: AbsolutePosition,
         name: Identifier?,
         options: LookupOptions = []
-    ) -> [LookupName] {
+    ) -> [LookupResult] {
         SourceFileScope(syntax: self).lexicalLookup(
             position: position,
             name: name,
@@ -37,7 +37,7 @@ public extension SourceFileScope {
         position: AbsolutePosition,
         name: Identifier?,
         options: LookupOptions = []
-    ) -> [LookupName] {
+    ) -> [LookupResult] {
         let startScope = self.findStartingScopeForLookup(position: position)
 
         let results = startScope.lookup(
@@ -48,7 +48,7 @@ public extension SourceFileScope {
             position: position
         )
 
-        return deduplicateLookupNames(results)
+        return deduplicateLookupResults(results)
     }
 
     func findStartingScopeForLookup(position: AbsolutePosition)
@@ -72,8 +72,20 @@ public extension SourceFileScope {
 }
 
 extension SyntaxScopeProtocol {
-    public func lookupLocalsOrMembers(name: Identifier?) -> [LookupName] {
-        introducedLookupNames.filtered(byName: name)
+    public func lookupLocalsOrMembers(name: Identifier?) -> [LookupResult] {
+        var results: [LookupResult] = []
+
+        let locals = introducedLocalLookupNames.filtered(byName: name)
+        if !locals.isEmpty {
+            results.append(.fromScope(self, withNames: locals))
+        }
+
+        let members = introducedMemberLookupNames.filtered(byName: name)
+        if !members.isEmpty {
+            results.append(.fromMembers(self, withNames: members))
+        }
+
+        return results
     }
 
     func lookup(
@@ -82,12 +94,12 @@ extension SyntaxScopeProtocol {
         limit: (any SyntaxScopeProtocol)?,
         lastListSearched: SyntaxIdentifier?,
         position: AbsolutePosition
-    ) -> [LookupName] {
+    ) -> [LookupResult] {
         if let limit, refersToSameScope(self, as: limit) {
             return []
         }
 
-        var results: [LookupName] = []
+        var results: [LookupResult] = []
 
         // Look for generics before members in violation of lexical ordering because
         // you can say "self.name" to get a name shadowed by a generic but you
@@ -127,7 +139,7 @@ extension SyntaxScopeProtocol {
     func lookInMyGenericParameters(
         name: Identifier?,
         lastListSearched: SyntaxIdentifier?
-    ) -> (results: [LookupName], listSearched: SyntaxIdentifier?) {
+    ) -> (results: [LookupResult], listSearched: SyntaxIdentifier?) {
         guard let info = genericParameters() else {
             return ([], lastListSearched)
         }
@@ -136,7 +148,12 @@ extension SyntaxScopeProtocol {
             return ([], lastListSearched)
         }
 
-        return (info.names.filtered(byName: name), info.identity)
+        let filtered = info.names.filtered(byName: name)
+        guard !filtered.isEmpty else {
+            return ([], info.identity)
+        }
+
+        return ([.fromScope(self, withNames: filtered)], info.identity)
     }
 }
 
@@ -145,7 +162,7 @@ func refersToSameScope(_ lhs: any SyntaxScopeProtocol, as rhs: any SyntaxScopePr
 }
 
 extension TopLevelCodeScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         guard let variableDecl = syntax.item.as(VariableDeclSyntax.self) else {
             return []
         }
@@ -155,7 +172,7 @@ extension TopLevelCodeScope {
 }
 
 extension FunctionBodyScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         var ancestor: (any SyntaxScopeProtocol)? = parent
         while let current = ancestor {
             if let fn = current as? AbstractFunctionDeclScope {
@@ -253,7 +270,7 @@ extension AbstractFunctionDeclScope {
 }
 
 extension SubscriptDeclScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         parameterClauseLookupResults(syntax.parameterClause)
     }
 
@@ -267,7 +284,7 @@ extension SubscriptDeclScope {
 }
 
 extension MacroDeclScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         parameterClauseLookupResults(syntax.signature.parameterClause)
     }
 
@@ -306,7 +323,7 @@ extension ExtensionScope {
 }
 
 extension CaptureListScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         captureItems.map { item -> LookupName in
             .identifier(SwiftSyntax.Syntax(item))
         }
@@ -314,7 +331,7 @@ extension CaptureListScope {
 }
 
 extension ClosureParametersScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         guard let parameterClause = syntax.signature?.parameterClause else {
             return []
         }
@@ -339,7 +356,7 @@ extension ClosureParametersScope {
 }
 
 extension GenericParameterScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         switch kind {
         case .parameter(let p):
             return [.identifier(SwiftSyntax.Syntax(p))]
@@ -356,7 +373,7 @@ extension GenericParameterScope {
 }
 
 extension BraceStmtScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         let localFuncResults: [LookupName] = localFuncs.map { decl -> LookupName in
             .declaration(SwiftSyntax.Syntax(decl))
         }
@@ -370,7 +387,7 @@ extension BraceStmtScope {
 }
 
 extension NominalTypeScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         switch portion {
         case .whole:
             // whole doesn't introduce their own name, it's handled by top level lookup
@@ -379,7 +396,14 @@ extension NominalTypeScope {
             }
 
             return []
-        case .where:
+        case .where, .body:
+            return []
+        }
+    }
+
+    public var introducedMemberLookupNames: [LookupName] {
+        switch portion {
+        case .whole, .where:
             return []
         case .body:
             return bodyMemberLookupNames
@@ -388,7 +412,7 @@ extension NominalTypeScope {
 }
 
 extension ExtensionScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         switch portion {
         case .whole, .where:
             // 参考実装 (ExtensionDeclSyntax.lookup) は memberBlock 範囲内のみ
@@ -397,7 +421,16 @@ extension ExtensionScope {
             // extended type として解決される設計のため、ここでは導入しない。
             return []
         case .body:
-            return [.implicit(.Self(DeclSyntax(syntax)))] + bodyMemberLookupNames
+            return [.implicit(.Self(DeclSyntax(syntax)))]
+        }
+    }
+
+    public var introducedMemberLookupNames: [LookupName] {
+        switch portion {
+        case .whole, .where:
+            return []
+        case .body:
+            return bodyMemberLookupNames
         }
     }
 }
@@ -422,7 +455,7 @@ extension GenericTypeOrExtensionScopeProtocol {
 }
 
 extension PatternEntryDeclScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         guard isLocalBinding else {
             return []
         }
@@ -452,13 +485,13 @@ extension PatternEntryInitializerScope {
 }
 
 extension ForEachPatternScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         syntax.pattern.introducedNames
     }
 }
 
 extension CaseLabelItemScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         guard let pattern = kind.pattern else {
             return []
         }
@@ -468,7 +501,7 @@ extension CaseLabelItemScope {
 }
 
 extension CaseStmtBodyScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         let optionalPatterns: [PatternSyntax?]
         switch kind {
         case .catchClause(let catchClause):
@@ -496,7 +529,7 @@ extension CaseStmtBodyScope {
 }
 
 extension ConditionalClausePatternUseScope {
-    public var introducedLookupNames: [LookupName] {
+    public var introducedLocalLookupNames: [LookupName] {
         guard let conditionPattern else {
             return []
         }
@@ -511,17 +544,3 @@ extension ConditionalClauseInitializerScope {
     }
 }
 
-private func deduplicateLookupNames(
-    _ names: [LookupName]
-) -> [LookupName] {
-    struct LookupNameKey: Hashable {
-        let name: String
-        let position: AbsolutePosition
-    }
-
-    var seen = Set<LookupNameKey>()
-
-    return names.filter {
-        seen.insert(LookupNameKey(name: $0.text, position: $0.position)).inserted
-    }
-}

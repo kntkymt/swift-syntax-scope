@@ -24,7 +24,7 @@ extension SyntaxScopeProtocol {
 
     private func dumpTree(prefix: String, isLastChild: Bool, isRoot: Bool) -> String {
         let marker = isRoot ? "" : (isLastChild ? "`-" : "|-")
-        let names = introducedLookupNames
+        let names = introducedLocalLookupNames + introducedMemberLookupNames
         let suffix =
             names.isEmpty
             ? ""

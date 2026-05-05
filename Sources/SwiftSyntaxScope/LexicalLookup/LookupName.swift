@@ -184,3 +184,54 @@ extension [LookupName] {
         return filter { $0.identifier == name }
     }
 }
+
+/// One contribution to a lexical-lookup result, paired with the scope it was
+/// produced from.
+public enum LookupResult {
+    /// Names introduced directly by `scope` (locals, parameters, generic
+    /// parameters, implicit `self`/`Self`, etc.).
+    case fromScope(any SyntaxScopeProtocol, withNames: [LookupName])
+    /// Names produced by looking at the members of a nominal-type or
+    /// extension body.
+    case fromMembers(any SyntaxScopeProtocol, withNames: [LookupName])
+
+    public var scope: any SyntaxScopeProtocol {
+        switch self {
+        case .fromScope(let scope, _), .fromMembers(let scope, _):
+            return scope
+        }
+    }
+
+    public var names: [LookupName] {
+        switch self {
+        case .fromScope(_, let names), .fromMembers(_, let names):
+            return names
+        }
+    }
+
+    fileprivate func withReplacedNames(_ names: [LookupName]) -> LookupResult {
+        switch self {
+        case .fromScope(let scope, _):
+            return .fromScope(scope, withNames: names)
+        case .fromMembers(let scope, _):
+            return .fromMembers(scope, withNames: names)
+        }
+    }
+}
+
+func deduplicateLookupResults(_ results: [LookupResult]) -> [LookupResult] {
+    struct LookupNameKey: Hashable {
+        let name: String
+        let position: AbsolutePosition
+    }
+
+    var seen = Set<LookupNameKey>()
+
+    return results.compactMap { result in
+        let kept = result.names.filter {
+            seen.insert(LookupNameKey(name: $0.text, position: $0.position)).inserted
+        }
+        guard !kept.isEmpty else { return nil }
+        return result.withReplacedNames(kept)
+    }
+}

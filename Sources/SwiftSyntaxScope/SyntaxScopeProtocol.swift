@@ -19,8 +19,9 @@ public protocol SyntaxScopeProtocol: AnyObject, CustomStringConvertible {
     var insertionPointForDeferredExpansion: (any SyntaxScopeProtocol)? { get }
 
     func addChild(_ child: any SyntaxScopeProtocol)
-    var introducedLookupNames: [LookupName] { get }
-    func lookupLocalsOrMembers(name: Identifier?) -> [LookupName]
+    var introducedLocalLookupNames: [LookupName] { get }
+    var introducedMemberLookupNames: [LookupName] { get }
+    func lookupLocalsOrMembers(name: Identifier?) -> [LookupResult]
     func genericParameters() -> GenericParametersInfo?
 }
 
@@ -38,7 +39,9 @@ extension SyntaxScopeProtocol {
         syntax.trimmedRange
     }
 
-    public var introducedLookupNames: [LookupName] { [] }
+    public var introducedLocalLookupNames: [LookupName] { [] }
+
+    public var introducedMemberLookupNames: [LookupName] { [] }
 
     public func genericParameters() -> GenericParametersInfo? {
         nil

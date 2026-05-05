@@ -1205,7 +1205,7 @@ private extension SwiftSyntaxScopeTests {
             options: options
         )
 
-        return results.map(LookupNameRecord.init)
+        return results.flatMap(\.names).map(LookupNameRecord.init)
     }
 
     static func extractMarkers(from syntax: SourceFileSyntax) -> [String: AbsolutePosition] {
