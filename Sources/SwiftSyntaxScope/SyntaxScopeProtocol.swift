@@ -61,32 +61,13 @@ extension SyntaxScopeProtocol {
     }
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        AnySyntaxScope(lhs) == AnySyntaxScope(rhs)
+        ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+            && lhs.isExpanded == rhs.isExpanded
     }
 
     public func hash(into hasher: inout Hasher) {
-        AnySyntaxScope(self).hash(into: &hasher)
-    }
-}
-
-public struct AnySyntaxScope: Hashable {
-    public let scope: any SyntaxScopeProtocol
-
-    public init(_ scope: any SyntaxScopeProtocol) {
-        self.scope = scope
-    }
-
-    public static func == (lhs: AnySyntaxScope, rhs: AnySyntaxScope) -> Bool {
-        ObjectIdentifier(lhs.scope) == ObjectIdentifier(rhs.scope)
-            && lhs.scope.isExpanded == rhs.scope.isExpanded
-            && lhs.scope.children.map(AnySyntaxScope.init)
-                == rhs.scope.children.map(AnySyntaxScope.init)
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(scope))
-        hasher.combine(scope.isExpanded)
-        hasher.combine(scope.children.map(AnySyntaxScope.init))
+        hasher.combine(ObjectIdentifier(self))
+        hasher.combine(isExpanded)
     }
 }
 
