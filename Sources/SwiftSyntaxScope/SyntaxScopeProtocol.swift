@@ -31,6 +31,8 @@ public struct GenericParametersInfo {
 }
 
 extension SyntaxScopeProtocol {
+    public var id: ObjectIdentifier { ObjectIdentifier(self) }
+
     public var lookupParent: (any SyntaxScopeProtocol)? {
         parent
     }
