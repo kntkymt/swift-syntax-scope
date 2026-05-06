@@ -1415,6 +1415,17 @@ public final class PatternEntryDeclScope: SyntaxScopeProtocol {
             return bindingRange
         }
 
+        // Guard for assertionFailure for lowerBound>upperBound during editing
+        // switch value {
+        // case .a:
+        //     let
+        //         ↑bindingRange.lowerBound
+        //       ↑lookupUpperBound (here is a implicit BraceStmtScope trimmedRange.upperBound)
+        // }
+        guard isLocalBinding, bindingRange.lowerBound <= lookupUpperBound else {
+            return bindingRange
+        }
+
         return bindingRange.lowerBound..<lookupUpperBound
     }
 

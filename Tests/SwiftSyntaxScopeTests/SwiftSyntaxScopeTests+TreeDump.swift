@@ -703,6 +703,28 @@ private extension SwiftSyntaxScopeTests {
                                 `-PatternEntryInitializerScope [3:17 - 3:17] entry 0
                 """
             ),
+            // Guard for assertionFailure for lowerBound>upperBound during editing
+            (
+                """
+                func f() {
+                    switch hoge {
+                    case .a(let a):
+                        let 
+                    }
+                }
+                """,
+                """
+                SourceFileScope [1:1 - 6:1]
+                `-AbstractFunctionDeclScope [1:1 - 6:1] 'f()'
+                  `-FunctionBodyScope [1:10 - 6:1]
+                    `-BraceStmtScope [1:10 - 6:1]
+                      `-SwitchExprScope [2:5 - 5:5]
+                        `-CaseStmtScope [3:5 - 4:11]
+                          `-CaseStmtBodyScope [4:9 - 4:11] introduces=[identifier:a]
+                            `-BraceStmtScope [4:9 - 4:11]
+                              `-PatternEntryDeclScope [4:13 - 4:13] entry 0
+                """
+            ),
             (
                 """
                 func f() {
